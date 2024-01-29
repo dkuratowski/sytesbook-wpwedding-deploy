@@ -6,35 +6,57 @@ on:
 jobs:
   execute:
     runs-on: ubuntu-latest
+
     steps:
     - uses: shivammathur/setup-php@v2
       with:
         php-version: "8.3"
+
     - name: Check PHP version
       run: php --version
+
     - uses: actions/checkout@v4
       with:
         repository: dkuratowski/sytesbook-wpwedding
         path: repos/sytesbook-wpwedding
         token: ${{ secrets.GIT_ACCESS_TOKEN }}
+
     - uses: actions/checkout@v4
       with:
         repository: dkuratowski/sytesbook-wpwedding-installer
         path: repos/sytesbook-wpwedding-installer
         token: ${{ secrets.GIT_ACCESS_TOKEN }}
+
     - uses: actions/checkout@v4
       with:
         repository: dkuratowski/sytes-react
         path: repos/sytes-react
         token: ${{ secrets.GIT_ACCESS_TOKEN }}
+
     - name: "Composer install: sytesbook-wpwedding"
       working-directory: ./repos/sytesbook-wpwedding
       run: composer install
+
     - name: "NPM install: sytes/react"
       working-directory: ./repos/sytes-react
       run: npm install
+
     - name: "NPM install and build: sytesbook-wpwedding/wp/wp-content/themes/sytesbook-wpwedding"
       working-directory: ./repos/sytesbook-wpwedding/wp/wp-content/themes/sytesbook-wpwedding
       run: |
         npm install
         npm run build
+
+    - name: Preparing deployment
+      run: |
+        rm -r ./repos/sytesbook-wpwedding/wp/wp-content
+        rm ./repos/sytesbook-wpwedding/wp/wp-config.php
+        mkdir ./deploy
+
+    - name: Creating ZIP for upload to public folder on the webserver
+      working-directory: ./repos/sytesbook-wpwedding/wp
+      run: zip -r ../../../deploy/wp.zip *
+
+    - name: Creating ZIP for upload to private folder on the webserver
+      working-directory: ./repos/sytesbook-wpwedding
+      run: zip -r ../../deploy/wp_src.zip src vendor
