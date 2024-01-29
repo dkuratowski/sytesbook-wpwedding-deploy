@@ -27,7 +27,16 @@ jobs:
         repository: dkuratowski/sytes-react
         path: repos/sytes-react
         token: ${{ secrets.GIT_ACCESS_TOKEN }}
-    - name: Listing directories
+    - name: "Composer install: sytesbook-wpwedding"
       run: |
-        ls -l
-        ls -l repos
+        cd /repos/sytesbook-wpwedding
+        composer install
+    - name: "NPM install: sytes/react"
+      run: |
+        cd /repos/sytes-react
+        npm install
+    - name: "NPM install and build: sytesbook-wpwedding/wp/wp-content/themes/sytesbook-wpwedding"
+      run: |
+        cd /repos/sytesbook-wpwedding/wp/wp-content/themes/sytesbook-wpwedding
+        npm install
+        npm run build
