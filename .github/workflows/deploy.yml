@@ -60,3 +60,23 @@ jobs:
     - name: Creating ZIP for upload to private folder on the webserver
       working-directory: ./repos/sytesbook-wpwedding
       run: zip -r ../../deploy/wp_src.zip src vendor
+
+    - name: Upload ZIP to public folder on the webserver
+      working-directory: ./deploy
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      with:
+        server: nasua.dima.hu
+        username: ${{ secrets.FTP_USER }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        server-dir: staging.sytesbook.com
+        exclude: wp_src.zip
+
+    - name: Upload ZIP to private folder on the webserver
+      working-directory: ./deploy
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      with:
+        server: nasua.dima.hu
+        username: ${{ secrets.FTP_USER }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        server-dir: staging.wp-src
+        exclude: wp.zip
