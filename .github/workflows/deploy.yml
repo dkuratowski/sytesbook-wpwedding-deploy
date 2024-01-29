@@ -1,0 +1,33 @@
+name: "Deploy Sytesbook WPWedding"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: shivammathur/setup-php@v2
+      with:
+        php-version: "8.3"
+    - name: Check PHP version
+      run: php --version
+    - uses: actions/checkout@v4
+      with:
+        repository: dkuratowski/sytesbook-wpwedding
+        path: repos/sytesbook-wpwedding
+        token: ${{ secrets.GIT_ACCESS_TOKEN }}
+    - uses: actions/checkout@v4
+      with:
+        repository: dkuratowski/sytesbook-wpwedding-installer
+        path: repos/sytesbook-wpwedding-installer
+        token: ${{ secrets.GIT_ACCESS_TOKEN }}
+    - uses: actions/checkout@v4
+      with:
+        repository: dkuratowski/sytes-react
+        path: repos/sytes-react
+        token: ${{ secrets.GIT_ACCESS_TOKEN }}
+    - name: Listing directories
+      run: |
+        ls -l
+        ls -l repos
