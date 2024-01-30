@@ -65,7 +65,8 @@ jobs:
         rm -r ./repos/sytesbook-wpwedding/wp/wp-content
         rm ./repos/sytesbook-wpwedding/wp/wp-config.php
         mkdir ./deploy
-        zip -r ./deploy/deploy.zip ./repos/sytesbook-wpwedding/src ./repos/sytesbook-wpwedding/vendor ./repos/sytesbook-wpwedding/wp
+        cd ./repos/sytesbook-wpwedding
+        zip -r ../../deploy/deploy.zip src vendor wp
 
     - name: Deploy ZIP to the webserver
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
