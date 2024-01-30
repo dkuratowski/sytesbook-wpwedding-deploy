@@ -63,6 +63,7 @@ jobs:
     - name: Creating ZIP to be deployed
       run: |
         rm -r ./repos/sytesbook-wpwedding/wp/wp-content
+        rm -r ./repos/sytesbook-wpwedding/src/wp-content/themes/sytesbook-wpwedding/node_modules
         rm ./repos/sytesbook-wpwedding/wp/wp-config.php
         mkdir ./deploy
         cd ./repos/sytesbook-wpwedding
