@@ -2,32 +2,45 @@ name: "Deploy Sytesbook WPWedding"
 
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        description: Select the environment
+        required: true
+        options:
+          - staging
+          - production
 
 jobs:
-  execute:
+  deploy:
     runs-on: ubuntu-latest
-
+    environment: 
+      name: ${{ inputs.environment }}
     steps:
-    - uses: shivammathur/setup-php@v2
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
       with:
         php-version: "8.3"
 
     - name: Check PHP version
       run: php --version
 
-    - uses: actions/checkout@v4
+    - name: "Checkout: sytesbook-wpwedding"
+      uses: actions/checkout@v4
       with:
         repository: dkuratowski/sytesbook-wpwedding
         path: repos/sytesbook-wpwedding
         token: ${{ secrets.GIT_ACCESS_TOKEN }}
 
-    - uses: actions/checkout@v4
+    - name: "Checkout: sytesbook-wpwedding-installer"
+      uses: actions/checkout@v4
       with:
         repository: dkuratowski/sytesbook-wpwedding-installer
         path: repos/sytesbook-wpwedding-installer
         token: ${{ secrets.GIT_ACCESS_TOKEN }}
 
-    - uses: actions/checkout@v4
+    - name: "Checkout: sytes-react"
+      uses: actions/checkout@v4
       with:
         repository: dkuratowski/sytes-react
         path: repos/sytes-react
@@ -37,46 +50,28 @@ jobs:
       working-directory: ./repos/sytesbook-wpwedding
       run: composer install
 
-    - name: "NPM install: sytes/react"
+    - name: "NPM install: sytes-react"
       working-directory: ./repos/sytes-react
       run: npm install
 
-    - name: "NPM install and build: sytesbook-wpwedding/wp/wp-content/themes/sytesbook-wpwedding"
-      working-directory: ./repos/sytesbook-wpwedding/wp/wp-content/themes/sytesbook-wpwedding
+    - name: "NPM install and build: sytesbook-wpwedding/src/wp-content/themes/sytesbook-wpwedding"
+      working-directory: ./repos/sytesbook-wpwedding/src/wp-content/themes/sytesbook-wpwedding
       run: |
         npm install
         npm run build
 
-    - name: Preparing deployment
+    - name: Creating ZIP to be deployed
       run: |
         rm -r ./repos/sytesbook-wpwedding/wp/wp-content
         rm ./repos/sytesbook-wpwedding/wp/wp-config.php
         mkdir ./deploy
+        zip -r ./deploy/deploy.zip ./repos/sytesbook-wpwedding/src ./repos/sytesbook-wpwedding/vendor ./repos/sytesbook-wpwedding/wp
 
-    - name: Creating ZIP for upload to public folder on the webserver
-      working-directory: ./repos/sytesbook-wpwedding/wp
-      run: zip -r ../../../deploy/wp.zip *
-
-    - name: Creating ZIP for upload to private folder on the webserver
-      working-directory: ./repos/sytesbook-wpwedding
-      run: zip -r ../../deploy/wp_src.zip src vendor
-
-    - name: Upload ZIP to public folder on the webserver
+    - name: Deploy ZIP to the webserver
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
-        server: nasua.dima.hu
+        server: ${{ env.FTP_SERVER }}
         username: ${{ secrets.FTP_USER }}
         password: ${{ secrets.FTP_PASSWORD }}
         local-dir: ./deploy/
-        server-dir: staging.sytesbook.com/
-        exclude: wp_src.zip
-
-    - name: Upload ZIP to private folder on the webserver
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-      with:
-        server: nasua.dima.hu
-        username: ${{ secrets.FTP_USER }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        local-dir: ./deploy/
-        server-dir: staging.wp-src/
-        exclude: wp.zip
+        server-dir: ${{ env.DEPLOYMENT_FOLDER_ON_SERVER }}
