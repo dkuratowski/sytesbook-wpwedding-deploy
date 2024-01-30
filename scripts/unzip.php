@@ -16,12 +16,11 @@ if (!$regexMatchResult || count($matches) !== 1)
     exit;
 }
 
-$wwwRoot = dirname(__DIR__);
 $deploymentZipFile = dirname(__DIR__) . "/{$deploymentFolder}/deploy.zip";
 if (!file_exists($deploymentZipFile))
 {
     http_response_code(404);
-    echo("Deployment ZIP file not found: {$deploymentZipFile}");
+    echo("Deployment ZIP file not found");
     exit;
 }
 
@@ -30,16 +29,16 @@ $openResult = $deploymentZipArchive->open($deploymentZipFile);
 if (!$openResult)
 {
     http_response_code(500);
-    echo("Deployment ZIP archive could not be opened: {$deploymentZipFile}");
+    echo("Deployment ZIP archive could not be opened");
     exit;
 }
 
-$extractResult = $deploymentZipArchive->extractTo($deploymentFolder);
+$extractResult = $deploymentZipArchive->extractTo(dirname(__DIR__) . "/{$deploymentFolder}/");
 if (!$extractResult)
 {
     $deploymentZipArchive->close();
     http_response_code(500);
-    echo("Deployment ZIP archive could not be extracted: {$deploymentZipFile}");
+    echo("Deployment ZIP archive could not be extracted");
     exit;
 }
 
@@ -47,5 +46,5 @@ $deploymentZipArchive->close();
 unlink($deploymentZipFile);
 
 http_response_code(200);
-echo("Deployment ZIP archive extracted successfully");
+echo("Deployment ZIP archive extracted successfully.");
 exit;
