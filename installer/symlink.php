@@ -34,6 +34,14 @@ if (!$regexMatchResult || count($matches) !== 1)
 
 $wwwRoot = dirname(__DIR__, 3);
 
+if (!file_exists("{$wwwRoot}/{$deploymentFolder}/wp"))
+{
+    http_response_code(500);
+    echo("Preceding intaller script not executed".PHP_EOL);
+    echo("Second line of output".PHP_EOL);
+    exit;
+}
+
 $symlinkCreationResult = true;
 $symlinkTargets = scandir("{$wwwRoot}/{$deploymentFolder}/wp/");
 foreach ($symlinkTargets as $symlinkTarget)

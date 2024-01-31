@@ -104,3 +104,8 @@ jobs:
         password: ${{ secrets.FTP_PASSWORD }}
         local-dir: ./installer/
         server-dir: "${{ vars.DOMAIN_FOLDER_ON_SERVER }}/installer/"
+
+    - name: Execute installer scripts
+      working-directory: ./repos/sytesbook-wpwedding-deploy
+      run: |
+        ./install.sh ${{ vars.DOMAIN_NAME }} ${{ steps.prepare_deployment.outputs.deployment_id }} ${{ vars.DEPLOYMENT_FOLDER_ON_SERVER }} ${{ vars.DOMAIN_FOLDER_ON_SERVER }}
