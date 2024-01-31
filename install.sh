@@ -52,7 +52,6 @@ if [[ $response_code != "200" ]]; then
     exit 1
 fi
 echo "  Done"
-exit 0
 
 echo "* Post-install cleanup"
 mapfile output < <(curl --silent --write-out "\n%{response_code}" "https://$domain_name/installer/$deployment_id/post-cleanup.php?deployment_folder=$deployment_folder&domain_folder=$domain_folder")
