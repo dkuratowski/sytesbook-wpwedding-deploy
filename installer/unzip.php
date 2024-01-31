@@ -16,9 +16,25 @@ if (!$regexMatchResult || count($matches) !== 1)
     exit;
 }
 
+$deploymentId = $_GET['deployment_id'] ?? null;
+if (!isset($deploymentId))
+{
+    http_response_code(400);
+    echo("Parameter 'deployment_id' is missing");
+    exit;
+}
+
+$regexMatchResult = preg_match('/\A[a-zA-Z0-9]+\Z/', $deploymentId, $matches);
+if (!$regexMatchResult || count($matches) !== 1)
+{
+    http_response_code(400);
+    echo("Parameter 'deployment_id' has unexpected format");
+    exit;
+}
+
 $wwwRoot = dirname(dirname(dirname(__DIR__)));
 
-$deploymentZipFile = "{$wwwRoot}/{$deploymentFolder}/deploy.zip";
+$deploymentZipFile = "{$wwwRoot}/{$deploymentFolder}/deployment_{$deploymentId}.zip";
 if (!file_exists($deploymentZipFile))
 {
     http_response_code(404);

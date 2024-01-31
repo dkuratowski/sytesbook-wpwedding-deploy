@@ -10,7 +10,7 @@ jobs:
     - name: Generate random string
       id: random_test
       run: |
-        random_string=$(LC_CTYPE=C tr -dc A-Za-z0-9 < /dev/urandom | tail -n +1 | head -c 32 | xargs)
+        random_string=$(LC_CTYPE=C tr -dc A-Za-z0-9 < /dev/urandom | head -c 32 | xargs)
         echo "$random_string"
         echo "deployment_id=$random_string" >> $GITHUB_OUTPUT 
 

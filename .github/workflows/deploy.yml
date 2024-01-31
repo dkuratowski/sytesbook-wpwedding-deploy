@@ -67,14 +67,24 @@ jobs:
         npm install
         npm run build
 
+    - name: Preparing deployment
+      id: prepare_deployment
+      run: |
+        deployment_id=$(LC_CTYPE=C tr -dc A-Za-z0-9 < /dev/urandom | head -c 32 | xargs)
+        mkdir -p ./installer/$deployment_id
+        touch ./installer/index.php
+        echo "<?php /* Silence is golden */ ?>" > ./installer/index.php
+        cp -r ./repos/sytesbook-wpwedding-deploy/installer/ ./installer/$deployment_id
+
     - name: Creating ZIP to be deployed
       run: |
         rm -r ./repos/sytesbook-wpwedding/wp/wp-content
         rm -r ./repos/sytesbook-wpwedding/src/wp-content/themes/sytesbook-wpwedding/node_modules
         rm ./repos/sytesbook-wpwedding/wp/wp-config.php
-        mkdir ./deploy
+        mkdir ./deployment
         cd ./repos/sytesbook-wpwedding
-        zip -r ../../deploy/deploy.zip src vendor wp
+        zip -r "../../deployment/deployment_${{ steps.prepare_deployment.outputs.deployment_id }}.zip" src vendor wp
+        echo "deployment_id=$deployment_id" >> $GITHUB_OUTPUT
 
     - name: Deploy ZIP to the webserver
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -82,7 +92,14 @@ jobs:
         server: ${{ vars.FTP_SERVER }}
         username: ${{ secrets.FTP_USER }}
         password: ${{ secrets.FTP_PASSWORD }}
-        local-dir: ./deploy/
-        server-dir: ${{ vars.DEPLOYMENT_FOLDER_ON_SERVER }}
+        local-dir: ./deployment/
+        server-dir: "${{ vars.DEPLOYMENT_FOLDER_ON_SERVER }}/"
 
-    #- name: Preparing install scripts to be deployed
+    - name: Deploy installer scripts to the webserver
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      with:
+        server: ${{ vars.FTP_SERVER }}
+        username: ${{ secrets.FTP_USER }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        local-dir: ./installer/
+        server-dir: "${{ vars.DOMAIN_FOLDER_ON_SERVER }}/installer/"
