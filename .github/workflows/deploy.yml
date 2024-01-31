@@ -74,7 +74,8 @@ jobs:
         mkdir -p ./installer/$deployment_id
         touch ./installer/index.php
         echo "<?php /* Silence is golden */ ?>" > ./installer/index.php
-        cp -r ./repos/sytesbook-wpwedding-deploy/installer/ ./installer/$deployment_id
+        cp ./repos/sytesbook-wpwedding-deploy/installer/* ./installer/$deployment_id
+        echo "deployment_id=$deployment_id" >> $GITHUB_OUTPUT
 
     - name: Creating ZIP to be deployed
       run: |
@@ -84,7 +85,6 @@ jobs:
         mkdir ./deployment
         cd ./repos/sytesbook-wpwedding
         zip -r "../../deployment/deployment_${{ steps.prepare_deployment.outputs.deployment_id }}.zip" src vendor wp
-        echo "deployment_id=$deployment_id" >> $GITHUB_OUTPUT
 
     - name: Deploy ZIP to the webserver
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
