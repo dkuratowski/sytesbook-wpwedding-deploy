@@ -46,7 +46,6 @@ if (!$extractResult)
 }
 
 $deploymentZipArchive->close();
-unlink($deploymentZipFile);
 
 http_response_code(200);
 echo("Deployment ZIP archive extracted successfully.");
