@@ -1,5 +1,7 @@
 <?php
 
+require __DIR__ . '/helpers.php';
+
 $deploymentFolder = $_GET['deployment_folder'] ?? null;
 if (!isset($deploymentFolder))
 {
@@ -36,9 +38,9 @@ $wwwRoot = dirname(__DIR__, 3);
 $deploymentId = basename(__DIR__);
 
 // Delete files and folders of the already existing deployment from the deployment folder
-unlink("{$wwwRoot}/{$deploymentFolder}/src");
-unlink("{$wwwRoot}/{$deploymentFolder}/wp");
-unlink("{$wwwRoot}/{$deploymentFolder}/vendor");
+unlink_dir("{$wwwRoot}/{$deploymentFolder}/src");
+unlink_dir("{$wwwRoot}/{$deploymentFolder}/wp");
+unlink_dir("{$wwwRoot}/{$deploymentFolder}/vendor");
 unlink("{$wwwRoot}/{$deploymentFolder}/.env");
 
 // Delete the FTP sync-state file from the deployment folder

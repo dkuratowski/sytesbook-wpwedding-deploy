@@ -1,5 +1,7 @@
 <?php
 
+require __DIR__ . '/helpers.php';
+
 $deploymentFolder = $_GET['deployment_folder'] ?? null;
 if (!isset($deploymentFolder))
 {
@@ -50,7 +52,7 @@ foreach ($deploymentFolderContent as $deploymentZipFile)
 }
 
 // Delete the installer scripts from the domain folder
-unlink("{$wwwRoot}/{$domainFolder}/installer");
+unlink_dir("{$wwwRoot}/{$domainFolder}/installer");
 
 http_response_code(200);
 echo("Post-install cleanup executed successfully.");
