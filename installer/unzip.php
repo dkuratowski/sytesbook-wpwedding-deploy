@@ -16,7 +16,9 @@ if (!$regexMatchResult || count($matches) !== 1)
     exit;
 }
 
-$deploymentZipFile = dirname(__DIR__) . "/{$deploymentFolder}/deploy.zip";
+$wwwRoot = dirname(dirname(dirname(__DIR__)));
+
+$deploymentZipFile = "{$wwwRoot}/{$deploymentFolder}/deploy.zip";
 if (!file_exists($deploymentZipFile))
 {
     http_response_code(404);
@@ -33,7 +35,7 @@ if (!$openResult)
     exit;
 }
 
-$extractResult = $deploymentZipArchive->extractTo(dirname(__DIR__) . "/{$deploymentFolder}/");
+$extractResult = $deploymentZipArchive->extractTo("{$wwwRoot}/{$deploymentFolder}/");
 if (!$extractResult)
 {
     $deploymentZipArchive->close();

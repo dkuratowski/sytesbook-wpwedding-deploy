@@ -25,6 +25,13 @@ jobs:
     - name: Check PHP version
       run: php --version
 
+    - name: "Checkout: sytesbook-wpwedding-deploy"
+      uses: actions/checkout@v4
+      with:
+        repository: dkuratowski/sytesbook-wpwedding-deploy
+        path: repos/sytesbook-wpwedding-deploy
+        token: ${{ secrets.GIT_ACCESS_TOKEN }}
+
     - name: "Checkout: sytesbook-wpwedding"
       uses: actions/checkout@v4
       with:
@@ -77,3 +84,5 @@ jobs:
         password: ${{ secrets.FTP_PASSWORD }}
         local-dir: ./deploy/
         server-dir: ${{ vars.DEPLOYMENT_FOLDER_ON_SERVER }}
+
+    #- name: Preparing install scripts to be deployed

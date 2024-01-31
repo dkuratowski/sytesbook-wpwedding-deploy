@@ -1,0 +1,13 @@
+name: "Test random string generation"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Generate random string
+      run: |
+        deployment_id=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
+        echo "$deployment_id"
