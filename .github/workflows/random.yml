@@ -8,6 +8,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Generate random string
+      id: random_test
       run: |
-        deployment_id=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
-        echo "$deployment_id"
+        random_string=$(LC_CTYPE=C tr -dc A-Za-z0-9 < /dev/urandom | head -c 32 | xargs)
+        echo "$random_string"
+        echo "deployment_id=$random_string" >> $GITHUB_OUTPUT 
+
+    - name: Read generated random string
+      run: |
+        echo "Generated random string: ${{ steps.random_test.outputs.deployment_id }}"
