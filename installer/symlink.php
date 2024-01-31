@@ -32,7 +32,7 @@ if (!$regexMatchResult || count($matches) !== 1)
     exit;
 }
 
-$wwwRoot = dirname(dirname(dirname(__DIR__)));
+$wwwRoot = dirname(__DIR__, 3);
 
 $symlinkCreationResult = true;
 $symlinkTargets = scandir("{$wwwRoot}/{$deploymentFolder}/wp/");

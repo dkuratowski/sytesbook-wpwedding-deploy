@@ -76,6 +76,7 @@ jobs:
         echo "<?php /* Silence is golden */ ?>" > ./installer/index.php
         cp ./repos/sytesbook-wpwedding-deploy/installer/* ./installer/$deployment_id
         echo "deployment_id=$deployment_id" >> $GITHUB_OUTPUT
+        echo "Deployment ID: $deployment_id"
 
     - name: Creating ZIP to be deployed
       run: |
