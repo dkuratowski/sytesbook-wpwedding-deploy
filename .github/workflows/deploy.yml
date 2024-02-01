@@ -95,7 +95,7 @@ jobs:
         cd ./repos/sytesbook-wpwedding
         touch version.json
         echo "{" >> version.json
-        echo "  \"revision\": \"$(git rev-parse HEAD)\"" >> version.json
+        echo "  \"revision\": \"$(git rev-parse HEAD)\"," >> version.json
         echo "  \"branch\": \"$(git rev-parse --abbrev-ref HEAD)\"" >> version.json
         echo "}" >> version.json
         zip -r "../../deployment/deployment_${{ steps.prepare_deployment.outputs.deployment_id }}.zip" src vendor wp .env.vault version.json
