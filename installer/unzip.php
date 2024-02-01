@@ -17,36 +17,36 @@ if (!$regexMatchResult || count($matches) !== 1)
 }
 
 $wwwRoot = dirname(__DIR__, 3);
-$deploymentId = basename(__DIR__);
+$packageId = basename(__DIR__);
 
-$deploymentZipFile = "{$wwwRoot}/{$deploymentFolder}/deployment_{$deploymentId}.zip";
-if (!file_exists($deploymentZipFile))
+$packageZipFile = "{$wwwRoot}/{$deploymentFolder}/deployment_{$packageId}.zip";
+if (!file_exists($packageZipFile))
 {
     http_response_code(404);
-    echo("Deployment ZIP file not found");
+    echo("Package ZIP file not found");
     exit;
 }
 
-$deploymentZipArchive = new ZipArchive();
-$openResult = $deploymentZipArchive->open($deploymentZipFile);
+$packageZipArchive = new ZipArchive();
+$openResult = $packageZipArchive->open($packageZipFile);
 if (!$openResult)
 {
     http_response_code(500);
-    echo("Deployment ZIP archive could not be opened");
+    echo("Package ZIP file could not be opened");
     exit;
 }
 
-$extractResult = $deploymentZipArchive->extractTo("{$wwwRoot}/{$deploymentFolder}/");
+$extractResult = $packageZipArchive->extractTo("{$wwwRoot}/{$deploymentFolder}/");
 if (!$extractResult)
 {
-    $deploymentZipArchive->close();
+    $packageZipArchive->close();
     http_response_code(500);
-    echo("Deployment ZIP archive could not be extracted");
+    echo("Package ZIP file could not be extracted");
     exit;
 }
 
-$deploymentZipArchive->close();
+$packageZipArchive->close();
 
 http_response_code(200);
-echo("Deployment ZIP archive extracted successfully.");
+echo("Package ZIP file extracted successfully.");
 exit;

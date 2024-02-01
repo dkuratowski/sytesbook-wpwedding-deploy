@@ -35,9 +35,9 @@ if (!$regexMatchResult || count($matches) !== 1)
 }
 
 $wwwRoot = dirname(__DIR__, 3);
-$deploymentId = basename(__DIR__);
+$packageId = basename(__DIR__);
 
-// Delete files and folders of the already existing deployment from the deployment folder
+// Delete files and folders of the already existing package from the deployment folder
 unlink_dir("{$wwwRoot}/{$deploymentFolder}/src");
 unlink_dir("{$wwwRoot}/{$deploymentFolder}/wp");
 unlink_dir("{$wwwRoot}/{$deploymentFolder}/vendor");
@@ -47,18 +47,18 @@ unlink("{$wwwRoot}/{$deploymentFolder}/version.json");
 // Delete the FTP sync-state file from the deployment folder
 unlink("{$wwwRoot}/{$deploymentFolder}/.ftp-deploy-sync-state.json");
 
-// Delete every earlier deployment ZIP files from the deployment folder
+// Delete every earlier package ZIP files from the deployment folder
 $deploymentFolderContent = scandir("{$wwwRoot}/{$deploymentFolder}/");
 foreach ($deploymentFolderContent as $deploymentZipFile)
 {
-    $regexMatchResult = preg_match('/\Adeployment_([a-zA-Z0-9]+)\.zip\Z/', $deploymentZipFile, $matches);
-    if ($regexMatchResult && count($matches) === 2 && $matches[1] !== $deploymentId)
+    $regexMatchResult = preg_match('/\Apackage_([a-zA-Z0-9]+)\.zip\Z/', $deploymentZipFile, $matches);
+    if ($regexMatchResult && count($matches) === 2 && $matches[1] !== $packageId)
     {
         unlink("{$wwwRoot}/{$deploymentFolder}/{$deploymentZipFile}");
     }
 }
 
-// Delete every symbolic link of the already existing deployment from the domain folder
+// Delete every symbolic link of the already existing package from the domain folder
 $domainFolderContent = scandir("{$wwwRoot}/{$domainFolder}/");
 foreach ($domainFolderContent as $symlink)
 {

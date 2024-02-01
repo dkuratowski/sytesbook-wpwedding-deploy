@@ -35,19 +35,18 @@ if (!$regexMatchResult || count($matches) !== 1)
 }
 
 $wwwRoot = dirname(__DIR__, 3);
-$deploymentId = basename(__DIR__);
 
 // Delete the FTP sync-state file from the deployment folder
 unlink("{$wwwRoot}/{$deploymentFolder}/.ftp-deploy-sync-state.json");
 
-// Delete every deployment ZIP files from the deployment folder (including the current one)
+// Delete every package ZIP files from the deployment folder (including the current one)
 $deploymentFolderContent = scandir("{$wwwRoot}/{$deploymentFolder}/");
-foreach ($deploymentFolderContent as $deploymentZipFile)
+foreach ($deploymentFolderContent as $packageZipFile)
 {
-    $regexMatchResult = preg_match('/\Adeployment_([a-zA-Z0-9]+)\.zip\Z/', $deploymentZipFile, $matches);
+    $regexMatchResult = preg_match('/\Apackage_([a-zA-Z0-9]+)\.zip\Z/', $packageZipFile, $matches);
     if ($regexMatchResult && count($matches) === 2)
     {
-        unlink("{$wwwRoot}/{$deploymentFolder}/{$deploymentZipFile}");
+        unlink("{$wwwRoot}/{$deploymentFolder}/{$packageZipFile}");
     }
 }
 

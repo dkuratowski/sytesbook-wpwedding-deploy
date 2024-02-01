@@ -71,45 +71,22 @@ jobs:
       run: |
         npm install
         npm run build
-
-    - name: Preparing deployment
-      id: prepare_deployment
+    
+    - name: "Create package"
+      id: create_package
       run: |
-        deployment_id=$(LC_CTYPE=C tr -dc A-Za-z0-9 < /dev/urandom | head -c 32 | xargs)
-        mkdir -p ./installer/$deployment_id
-        touch ./installer/index.php
-        echo "<?php /* Silence is golden */ ?>" > ./installer/index.php
-        cp ./repos/sytesbook-wpwedding-deploy/installer/* ./installer/$deployment_id
-        echo "deployment_id=$deployment_id" >> $GITHUB_OUTPUT
-        echo "Deployment ID: $deployment_id"
+        ./create-package.sh ${{ secrets.DOTENV_VAULT_KEY }}
 
-    - name: Creating ZIP to be deployed
-      run: |
-        rm -r ./repos/sytesbook-wpwedding/wp/wp-content
-        rm -r ./repos/sytesbook-wpwedding/src/wp-content/themes/sytesbook-wpwedding/node_modules
-        rm ./repos/sytesbook-wpwedding/wp/composer.json
-        rm ./repos/sytesbook-wpwedding/wp/license.txt
-        rm ./repos/sytesbook-wpwedding/wp/readme.html
-        rm ./repos/sytesbook-wpwedding/wp/wp-config.php
-        mkdir ./deployment
-        cd ./repos/sytesbook-wpwedding
-        touch version.json
-        echo "{" >> version.json
-        echo "  \"revision\": \"$(git rev-parse HEAD)\"," >> version.json
-        echo "  \"branch\": \"$(git rev-parse --abbrev-ref HEAD)\"" >> version.json
-        echo "}" >> version.json
-        zip -r "../../deployment/deployment_${{ steps.prepare_deployment.outputs.deployment_id }}.zip" src vendor wp .env.vault version.json
-
-    - name: Deploy ZIP to the webserver
+    - name: Deploy package to the webserver
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
         server: ${{ vars.FTP_SERVER }}
         username: ${{ secrets.FTP_USER }}
         password: ${{ secrets.FTP_PASSWORD }}
-        local-dir: ./deployment/
+        local-dir: ./package/
         server-dir: "${{ vars.DEPLOYMENT_FOLDER_ON_SERVER }}/"
 
-    - name: Deploy installer scripts to the webserver
+    - name: Deploy on-site installer scripts to the webserver
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
         server: ${{ vars.FTP_SERVER }}
@@ -118,7 +95,7 @@ jobs:
         local-dir: ./installer/
         server-dir: "${{ vars.DOMAIN_FOLDER_ON_SERVER }}/installer/"
 
-    - name: Execute installer scripts
+    - name: Install
       working-directory: ./repos/sytesbook-wpwedding-deploy
       run: |
-        ./install.sh ${{ vars.DOMAIN_NAME }} ${{ steps.prepare_deployment.outputs.deployment_id }} ${{ vars.DEPLOYMENT_FOLDER_ON_SERVER }} ${{ vars.DOMAIN_FOLDER_ON_SERVER }}
+        ./install.sh ${{ vars.DOMAIN_NAME }} ${{ steps.create_package.outputs.package_id }} ${{ vars.DEPLOYMENT_FOLDER_ON_SERVER }} ${{ vars.DOMAIN_FOLDER_ON_SERVER }}
