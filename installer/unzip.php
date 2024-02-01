@@ -19,7 +19,7 @@ if (!$regexMatchResult || count($matches) !== 1)
 $wwwRoot = dirname(__DIR__, 3);
 $packageId = basename(__DIR__);
 
-$packageZipFile = "{$wwwRoot}/{$deploymentFolder}/deployment_{$packageId}.zip";
+$packageZipFile = "{$wwwRoot}/{$deploymentFolder}/package_{$packageId}.zip";
 if (!file_exists($packageZipFile))
 {
     http_response_code(404);
