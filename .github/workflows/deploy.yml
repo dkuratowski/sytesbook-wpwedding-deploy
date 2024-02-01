@@ -75,7 +75,7 @@ jobs:
     - name: "Create package"
       id: create_package
       run: |
-        ./create-package.sh ${{ secrets.DOTENV_VAULT_KEY }}
+        ./repos/sytesbook-wpwedding-deploy/create-package.sh ${{ secrets.DOTENV_VAULT_KEY }}
 
     - name: Deploy package to the webserver
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -96,6 +96,5 @@ jobs:
         server-dir: "${{ vars.DOMAIN_FOLDER_ON_SERVER }}/installer/"
 
     - name: Install
-      working-directory: ./repos/sytesbook-wpwedding-deploy
       run: |
-        ./install.sh ${{ vars.DOMAIN_NAME }} ${{ steps.create_package.outputs.package_id }} ${{ vars.DEPLOYMENT_FOLDER_ON_SERVER }} ${{ vars.DOMAIN_FOLDER_ON_SERVER }}
+        ./repos/sytesbook-wpwedding-deploy/install.sh ${{ vars.DOMAIN_NAME }} ${{ steps.create_package.outputs.package_id }} ${{ vars.DEPLOYMENT_FOLDER_ON_SERVER }} ${{ vars.DOMAIN_FOLDER_ON_SERVER }}
