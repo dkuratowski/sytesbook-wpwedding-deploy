@@ -41,7 +41,7 @@ $deploymentId = basename(__DIR__);
 unlink_dir("{$wwwRoot}/{$deploymentFolder}/src");
 unlink_dir("{$wwwRoot}/{$deploymentFolder}/wp");
 unlink_dir("{$wwwRoot}/{$deploymentFolder}/vendor");
-array_walk(glob("{$wwwRoot}/{$deploymentFolder}/.env*"), 'unlink');
+array_map('unlink', glob("{$wwwRoot}/{$deploymentFolder}/.env*"));
 unlink("{$wwwRoot}/{$deploymentFolder}/version.json");
 
 // Delete the FTP sync-state file from the deployment folder
