@@ -39,7 +39,6 @@ echo "  Done"
 
 
 echo "* Decrypting .env.vault"
-touch .env
 node ../sytesbook-wpwedding-deploy/decrypt-env.js .env.vault .env
 echo "  Done"
 
