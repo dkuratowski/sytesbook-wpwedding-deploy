@@ -34,14 +34,13 @@ echo "{" >> version.json
 echo "  \"revision\": \"$(git rev-parse HEAD)\"," >> version.json
 echo "  \"branch\": \"$(git rev-parse --abbrev-ref HEAD)\"" >> version.json
 echo "}" >> version.json
-echo "  $(cat version.json)"
+echo "$(cat version.json)"
 echo "  Done"
 
 
 echo "* Decrypting .env.vault"
-# TODO: decrypt .env.vault and put the output to .env instead of this dummy implementation
 touch .env
-echo "MY_ENV_VAR=\"my_env_var\"" >> .env
+node ../sytesbook-wpwedding-deploy/decrypt-env.js .env.vault .env
 echo "  Done"
 
 

@@ -26,8 +26,16 @@ jobs:
       with:
         php-version: "8.3"
 
-    - name: Check PHP version
-      run: php --version
+    - name: Setup NodeJS
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+
+    - name: Check versions
+      run: |
+        echo "PHP version: $(php --version)"
+        echo "NodeJS version: $(node --version)"
+        echo "NPM version: $(npm --version)"
 
     - name: "Checkout: sytesbook-wpwedding-deploy"
       uses: actions/checkout@v4
@@ -71,11 +79,18 @@ jobs:
       run: |
         npm install
         npm run build
+
+    - name: "NPM install: sytesbook-wpwedding-deploy"
+      working-directory: ./repos/sytesbook-wpwedding-deploy
+      run: |
+        npm install
     
     - name: "Create package"
       id: create_package
+      env:
+        DOTENV_KEY: ${{ secrets.DOTENV_KEY }}
       run: |
-        ./repos/sytesbook-wpwedding-deploy/create-package.sh ${{ secrets.DOTENV_VAULT_KEY }}
+        ./repos/sytesbook-wpwedding-deploy/create-package.sh
 
     - name: Deploy package to the webserver
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
