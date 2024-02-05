@@ -47,7 +47,7 @@ unlink("{$wwwRoot}/{$deploymentFolder}/version.json");
 // Delete the FTP sync-state file from the deployment folder
 unlink("{$wwwRoot}/{$deploymentFolder}/.ftp-deploy-sync-state.json");
 
-// Delete every earlier package ZIP files from the deployment folder
+// Delete every package ZIP files from the deployment folder except the current one
 $deploymentFolderContent = scandir("{$wwwRoot}/{$deploymentFolder}/");
 foreach ($deploymentFolderContent as $deploymentZipFile)
 {

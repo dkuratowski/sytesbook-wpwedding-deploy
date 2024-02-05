@@ -43,8 +43,8 @@ unlink("{$wwwRoot}/{$deploymentFolder}/.ftp-deploy-sync-state.json");
 $deploymentFolderContent = scandir("{$wwwRoot}/{$deploymentFolder}/");
 foreach ($deploymentFolderContent as $packageZipFile)
 {
-    $regexMatchResult = preg_match('/\Apackage_([a-zA-Z0-9]+)\.zip\Z/', $packageZipFile, $matches);
-    if ($regexMatchResult && count($matches) === 2)
+    $regexMatchResult = preg_match('/\Apackage_[a-zA-Z0-9]+\.zip\Z/', $packageZipFile, $matches);
+    if ($regexMatchResult && count($matches) === 1)
     {
         unlink("{$wwwRoot}/{$deploymentFolder}/{$packageZipFile}");
     }

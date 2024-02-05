@@ -37,33 +37,29 @@ $wwwRoot = dirname(__DIR__, 3);
 if (!file_exists("{$wwwRoot}/{$deploymentFolder}/wp"))
 {
     http_response_code(500);
-    echo("Preceding intaller script not executed".PHP_EOL);
-    echo("Second line of output".PHP_EOL);
+    echo("Preceding intaller script not executed");
     exit;
 }
 
 $symlinkCreationResult = true;
-$symlinkTargets = scandir("{$wwwRoot}/{$deploymentFolder}/wp/");
-foreach ($symlinkTargets as $symlinkTarget)
-{
-    if ($symlinkTarget !== '.' && $symlinkTarget !== '..')
-    {
-        unlink("{$wwwRoot}/{$domainFolder}/{$symlinkTarget}");
-        $success = symlink("{$wwwRoot}/{$deploymentFolder}/wp/{$symlinkTarget}", "{$wwwRoot}/{$domainFolder}/{$symlinkTarget}") === true;
-        $symlinkCreationResult = $symlinkCreationResult && $success;
-    }
-}
 
-unlink("{$wwwRoot}/{$domainFolder}/wp-content");
-$success = symlink("{$wwwRoot}/{$deploymentFolder}/src/wp-content", "{$wwwRoot}/{$domainFolder}/wp-content") === true;
+// Create symbolic links into the deployment folder
+unlink("{$wwwRoot}/{$deploymentFolder}/wp/wp-content");
+unlink("{$wwwRoot}/{$deploymentFolder}/wp/wp-config.php");
+$success = symlink("{$wwwRoot}/{$deploymentFolder}/src/wp-content", "{$wwwRoot}/{$deploymentFolder}/wp/wp-content") === true;
+$symlinkCreationResult = $symlinkCreationResult && $success;
+$success = symlink("{$wwwRoot}/{$deploymentFolder}/src/wp-config.php", "{$wwwRoot}/{$deploymentFolder}/wp/wp-config.php") === true;
 $symlinkCreationResult = $symlinkCreationResult && $success;
 
-unlink("{$wwwRoot}/{$domainFolder}/wp-config.php");
-$success = symlink("{$wwwRoot}/{$deploymentFolder}/src/wp-config.php", "{$wwwRoot}/{$domainFolder}/wp-config.php") === true;
-$symlinkCreationResult = $symlinkCreationResult && $success;
-
+// Create symbolic links into the domain folder
 unlink("{$wwwRoot}/{$domainFolder}/uploads");
+unlink("{$wwwRoot}/{$domainFolder}/wp-admin");
+unlink("{$wwwRoot}/{$domainFolder}/index.php");
 $success = symlink("{$wwwRoot}/{$deploymentFolder}/uploads", "{$wwwRoot}/{$domainFolder}/uploads") === true;
+$symlinkCreationResult = $symlinkCreationResult && $success;
+$success = symlink("{$wwwRoot}/{$deploymentFolder}/wp/wp-admin", "{$wwwRoot}/{$domainFolder}/wp-admin") === true;
+$symlinkCreationResult = $symlinkCreationResult && $success;
+$success = symlink("{$wwwRoot}/{$deploymentFolder}/wp/index.php", "{$wwwRoot}/{$domainFolder}/index.php") === true;
 $symlinkCreationResult = $symlinkCreationResult && $success;
 
 if (!$symlinkCreationResult)
