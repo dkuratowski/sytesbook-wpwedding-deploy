@@ -63,6 +63,8 @@ $success = symlink("{$wwwRoot}/{$deploymentFolder}/wp/wp-login.php", "{$wwwRoot}
 $symlinkCreationResult = $symlinkCreationResult && $success;
 $success = symlink("{$wwwRoot}/{$deploymentFolder}/wp/index.php", "{$wwwRoot}/{$domainFolder}/index.php") === true;
 $symlinkCreationResult = $symlinkCreationResult && $success;
+$success = symlink("{$wwwRoot}/{$deploymentFolder}/wp/.htaccess", "{$wwwRoot}/{$domainFolder}/.htaccess") === true;
+$symlinkCreationResult = $symlinkCreationResult && $success;
 
 if (!$symlinkCreationResult)
 {

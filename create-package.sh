@@ -28,7 +28,6 @@ echo "  Done"
 
 
 echo "* Adding miscellaneous files"
-ls -l ./repos/sytesbook-wpwedding-deploy/misc
 cp ./repos/sytesbook-wpwedding-deploy/misc/.htaccess ./repos/sytesbook-wpwedding/wp
 echo "  Done"
 
