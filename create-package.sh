@@ -27,6 +27,11 @@ rm ./repos/sytesbook-wpwedding/wp/wp-config.php
 echo "  Done"
 
 
+echo "* Adding miscellaneous file to the package"
+cp ./repos/sytesbook-wpwedding-deploy/misc/* ./repos/sytesbook-wpwedding/wp
+echo "  Done"
+
+
 echo "* Creating version.json"
 cd ./repos/sytesbook-wpwedding
 touch version.json
