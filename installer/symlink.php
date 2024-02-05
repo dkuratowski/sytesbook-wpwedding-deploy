@@ -59,6 +59,8 @@ $success = symlink("{$wwwRoot}/{$deploymentFolder}/uploads", "{$wwwRoot}/{$domai
 $symlinkCreationResult = $symlinkCreationResult && $success;
 $success = symlink("{$wwwRoot}/{$deploymentFolder}/wp/wp-admin", "{$wwwRoot}/{$domainFolder}/wp-admin") === true;
 $symlinkCreationResult = $symlinkCreationResult && $success;
+$success = symlink("{$wwwRoot}/{$deploymentFolder}/wp/wp-login.php", "{$wwwRoot}/{$domainFolder}/wp-login.php") === true;
+$symlinkCreationResult = $symlinkCreationResult && $success;
 $success = symlink("{$wwwRoot}/{$deploymentFolder}/wp/index.php", "{$wwwRoot}/{$domainFolder}/index.php") === true;
 $symlinkCreationResult = $symlinkCreationResult && $success;
 
