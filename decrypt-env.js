@@ -2,6 +2,11 @@
 const fs = require('fs');
 const dotenv = require('dotenv');
 
+if (!('DOTENV_KEY' in process.env)) {
+    console.log("Missing environment variable: DOTENV_KEY");
+    process.exit(1);
+}
+
 if (!process.argv[2]) {
     console.log("Missing parameter: path to input .env.vault file");
     process.exit(1);
@@ -23,7 +28,11 @@ if (output.error) {
     process.exit(1);
 }
 
-const decryptedDotEnv = JSON.stringify(output.parsed, null, 2);
-fs.writeFileSync(process.argv[3], decryptedDotEnv);
+const writer = fs.createWriteStream(process.argv[3]);
+const writeLine = (line) => writer.write(`${line}\n`);
+for (const [key, value] of Object.entries(output.parsed)) {
+    writeLine(`${key}="${value}"`);
+}
+writer.close();
 
 console.log("Successfully decrypted .env.vault file");
