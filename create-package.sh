@@ -27,8 +27,9 @@ rm ./repos/sytesbook-wpwedding/wp/wp-config.php
 echo "  Done"
 
 
-echo "* Adding miscellaneous file to the package"
-cp ./repos/sytesbook-wpwedding-deploy/misc/* ./repos/sytesbook-wpwedding/wp
+echo "* Adding miscellaneous files"
+ls -l ./repos/sytesbook-wpwedding-deploy/misc
+cp ./repos/sytesbook-wpwedding-deploy/misc/.htaccess ./repos/sytesbook-wpwedding/wp
 echo "  Done"
 
 
@@ -48,7 +49,7 @@ node ../sytesbook-wpwedding-deploy/decrypt-env.js .env.vault .env
 echo "  Done"
 
 
-echo "* Preparing ZIP file for deployment"
+echo "* Creating ZIP file for deployment"
 mkdir ../../package
 zip -r "../../package/package_$package_id.zip" src vendor wp .env version.json
 echo "  Package created"
