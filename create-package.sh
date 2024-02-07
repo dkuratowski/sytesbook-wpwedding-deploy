@@ -18,6 +18,7 @@ echo "  Done"
 
 
 echo "* Removing unnecessary files"
+rm -r ./repos/sytesbook-wpwedding/wp/uploads
 rm -r ./repos/sytesbook-wpwedding/wp/wp-content
 rm -r ./repos/sytesbook-wpwedding/src/wp-content/themes/sytesbook-wpwedding/node_modules
 rm ./repos/sytesbook-wpwedding/wp/composer.json
