@@ -44,8 +44,11 @@ if (!file_exists("{$wwwRoot}/{$deploymentFolder}/wp"))
 $symlinkCreationResult = true;
 
 // Create symbolic links into the deployment folder
+unlink("{$wwwRoot}/{$deploymentFolder}/wp/uploads");
 unlink("{$wwwRoot}/{$deploymentFolder}/wp/wp-content");
 unlink("{$wwwRoot}/{$deploymentFolder}/wp/wp-config.php");
+$success = symlink("{$wwwRoot}/{$deploymentFolder}/uploads", "{$wwwRoot}/{$deploymentFolder}/wp/uploads") === true;
+$symlinkCreationResult = $symlinkCreationResult && $success;
 $success = symlink("{$wwwRoot}/{$deploymentFolder}/src/wp-content", "{$wwwRoot}/{$deploymentFolder}/wp/wp-content") === true;
 $symlinkCreationResult = $symlinkCreationResult && $success;
 $success = symlink("{$wwwRoot}/{$deploymentFolder}/src/wp-config.php", "{$wwwRoot}/{$deploymentFolder}/wp/wp-config.php") === true;
