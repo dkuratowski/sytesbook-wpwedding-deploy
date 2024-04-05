@@ -17,7 +17,8 @@ cp ./repos/sytesbook-wpwedding-deploy/installer/* ./installer/$package_id
 echo "  Done"
 
 
-echo "* Removing unnecessary files"
+echo "* Removing unnecessary files and symbolic links created by composer"
+rm -r ./repos/sytesbook-wpwedding/wp/migrations
 rm -r ./repos/sytesbook-wpwedding/wp/uploads
 rm -r ./repos/sytesbook-wpwedding/wp/wp-content
 rm -r ./repos/sytesbook-wpwedding/src/wp-content/themes/sytesbook-wpwedding/node_modules
