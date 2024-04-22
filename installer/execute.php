@@ -9,13 +9,7 @@ $logger = new Monolog\Logger(
 );
 
 $query = Sytesbook\WPWedding\Deploy\Utils\Query::read(
-    // TODO: read query from $_GET
-    [
-        'script' => 'deploy-system',
-        'deployment_folder' => 'my_deployment_folder',
-        'domain_folder' => 'my_domain_folder'
-    ],
-    
+    $_GET,    
     // Constraints
     [
         'script' => '/\A[a-z_\-\.A-Z0-9]+\Z/',

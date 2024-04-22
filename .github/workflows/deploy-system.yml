@@ -79,6 +79,10 @@ jobs:
       run: |
         npm install
         npm run build
+    
+    - name: "Composer install: sytesbook-wpwedding-deploy/installer"
+      working-directory: ./repos/sytesbook-wpwedding-deploy/installer
+      run: composer install
 
     - name: "NPM install: sytesbook-wpwedding-deploy"
       working-directory: ./repos/sytesbook-wpwedding-deploy
@@ -112,4 +116,4 @@ jobs:
 
     - name: Install
       run: |
-        ./repos/sytesbook-wpwedding-deploy/install.sh ${{ vars.DOMAIN_NAME }} ${{ steps.create_package.outputs.package_id }} ${{ vars.DEPLOYMENT_FOLDER_ON_SERVER }} ${{ vars.DOMAIN_FOLDER_ON_SERVER }}
+        ./repos/sytesbook-wpwedding-deploy/install.sh deploy-system ${{ vars.DOMAIN_NAME }} ${{ steps.create_package.outputs.package_id }} ${{ vars.DEPLOYMENT_FOLDER_ON_SERVER }} ${{ vars.DOMAIN_FOLDER_ON_SERVER }}
