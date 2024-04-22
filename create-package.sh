@@ -13,7 +13,7 @@ echo "* Preparing on-site installer scripts for deployment"
 mkdir -p ./installer/$package_id
 touch ./installer/index.php
 echo "<?php /* Silence is golden */ ?>" > ./installer/index.php
-cp ./repos/sytesbook-wpwedding-deploy/installer/* ./installer/$package_id
+cp -r ./repos/sytesbook-wpwedding-deploy/installer/* ./installer/$package_id
 echo "  Done"
 
 
