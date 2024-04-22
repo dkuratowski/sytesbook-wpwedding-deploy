@@ -14,6 +14,8 @@ mkdir -p ./installer/$package_id
 touch ./installer/index.php
 echo "<?php /* Silence is golden */ ?>" > ./installer/index.php
 cp -r ./repos/sytesbook-wpwedding-deploy/installer/* ./installer/$package_id
+rm ./installer/$package_id/composer.json
+rm ./installer/$package_id/composer.lock
 echo "  Done"
 
 
