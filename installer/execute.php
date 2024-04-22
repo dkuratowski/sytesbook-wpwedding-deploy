@@ -8,30 +8,30 @@ $logger = new Monolog\Logger(
     [new Monolog\Handler\StreamHandler('php://output', Monolog\Level::Debug)]
 );
 
-$query = Sytesbook\WPWedding\Deploy\Utils\Query::read(
-    $_GET,    
-    // Constraints
-    [
-        'script' => '/\A[a-z_\-\.A-Z0-9]+\Z/',
-        'deployment_folder' => '/\A[a-z_\-\.A-Z0-9]+\Z/',
-        'domain_folder' => '/\A[a-z_\-\.A-Z0-9]+\Z/'
-    ],
-);
-
-$logger->info("Loading installer script '{$query['script']}'");
-
-if (!file_exists(__DIR__ . "/scripts/{$query['script']}.php"))
-{
-    http_response_code(500);
-    $logger->error("Installer script '{$query['script']}' not found");
-    exit;
-}
-
-$script = require __DIR__ . "/scripts/{$query['script']}.php";
-$logger->info("Installer script '{$query['script']}' loaded");
-
 try
 {
+    $query = Sytesbook\WPWedding\Deploy\Utils\Query::check(
+        $_GET,    
+        // Constraints
+        [
+            'script' => '/\A[a-z_\-\.A-Z0-9]+\Z/',
+            'deployment_folder' => '/\A[a-z_\-\.A-Z0-9]+\Z/',
+            'domain_folder' => '/\A[a-z_\-\.A-Z0-9]+\Z/'
+        ],
+    );
+
+    $logger->info("Loading installer script '{$query['script']}'");
+
+    if (!file_exists(__DIR__ . "/scripts/{$query['script']}.php"))
+    {
+        http_response_code(500);
+        $logger->error("Installer script '{$query['script']}' not found");
+        exit;
+    }
+
+    $script = require __DIR__ . "/scripts/{$query['script']}.php";
+    $logger->info("Installer script '{$query['script']}' loaded");
+
     $wwwRoot = dirname(__DIR__, 3);
     $packageId = basename(__DIR__);
 
