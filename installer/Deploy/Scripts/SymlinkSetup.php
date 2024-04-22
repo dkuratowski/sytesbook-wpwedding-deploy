@@ -15,7 +15,7 @@ class SymlinkSetup
         $this->logger = $logger;
     }
 
-    public function execute(): bool
+    public function execute(array $context): bool
     {
         $this->logger->info("  -> Hello SymlinkSetup", $this->params);
         return true;

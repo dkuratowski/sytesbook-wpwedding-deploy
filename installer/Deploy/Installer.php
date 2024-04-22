@@ -7,30 +7,30 @@ use ReflectionClass;
 
 class Installer
 {
-    private array $descriptor;
+    private array $script;
     private Logger $logger;
 
-    public function __construct(array $descriptor, Logger $logger)
+    public function __construct(array $script, Logger $logger)
     {
-        $this->descriptor = $descriptor;
+        $this->script = $script;
         $this->logger = $logger;
     }
 
-    public function execute(): bool
+    public function execute(array $context): bool
     {
-        $this->logger->info("Installer: {$this->descriptor['title']}");
-        foreach ($this->descriptor['steps'] as $installerStep)
+        $this->logger->info("Installer: {$this->script['title']}");
+        foreach ($this->script['steps'] as $installerStep)
         {
             $this->logger->info("* {$installerStep['title']}");
-            if (!class_exists($installerStep['script']))
+            if (!class_exists($installerStep['executor']))
             {
-                $this->logger->error("  -> Class '{$installerStep['script']}' doesn't exist");
+                $this->logger->error("  -> Class '{$installerStep['executor']}' doesn't exist");
                 return false;
             }
 
-            $scriptType = new ReflectionClass($installerStep['script']);
-            $script = $scriptType->newInstance($installerStep['params'] ?? [], $this->logger);
-            $success = $script->execute();
+            $executorType = new ReflectionClass($installerStep['executor']);
+            $executor = $executorType->newInstance($installerStep['params'] ?? [], $this->logger);
+            $success = $executor->execute($context);
             if (!$success)
             {
                 $this->logger->error("  -> Step failed");

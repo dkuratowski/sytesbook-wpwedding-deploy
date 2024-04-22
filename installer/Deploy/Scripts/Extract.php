@@ -15,7 +15,7 @@ class Extract
         $this->logger = $logger;
     }
 
-    public function execute(): bool
+    public function execute(array $context): bool
     {
         $this->logger->info("  -> Hello Extract", $this->params);
         return true;

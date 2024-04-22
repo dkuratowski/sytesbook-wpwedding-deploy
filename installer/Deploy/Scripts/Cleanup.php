@@ -15,7 +15,7 @@ class Cleanup
         $this->logger = $logger;
     }
 
-    public function execute(): bool
+    public function execute(array $context): bool
     {
         $this->logger->info("  -> Hello Cleanup", $this->params);
         return true;

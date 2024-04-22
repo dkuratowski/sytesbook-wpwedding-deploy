@@ -8,46 +8,54 @@ $logger = new Monolog\Logger(
     [new Monolog\Handler\StreamHandler('php://output', Monolog\Level::Debug)]
 );
 
-$logger->info('Loading installer descriptor file');
+$query = Sytesbook\WPWedding\Deploy\Utils\Query::read(
+    // TODO: read query from $_GET
+    [
+        'script' => 'deploy-system',
+        'deployment_folder' => 'my_deployment_folder',
+        'domain_folder' => 'my_domain_folder'
+    ],
+    
+    // Constraints
+    [
+        'script' => '/\A[a-z_\-\.A-Z0-9]+\Z/',
+        'deployment_folder' => '/\A[a-z_\-\.A-Z0-9]+\Z/',
+        'domain_folder' => '/\A[a-z_\-\.A-Z0-9]+\Z/'
+    ],
+);
 
-if (!file_exists(__DIR__ . '/installer.json'))
+$logger->info("Loading installer script '{$query['script']}'");
+
+if (!file_exists(__DIR__ . "/scripts/{$query['script']}.php"))
 {
     http_response_code(500);
-    $logger->error('Installer descriptor file not found');
+    $logger->error("Installer script '{$query['script']}' not found");
     exit;
 }
 
-$descriptorContent = file_get_contents(__DIR__ . '/installer.json');
-if ($descriptorContent === false)
-{
-    http_response_code(500);
-    $logger->error('Unable to read installer descriptor file');
-    exit;
-}
-
-$descriptor = json_decode($descriptorContent, true);
-if (!isset($descriptor))
-{
-    http_response_code(500);
-    $logger->error('Unable to parse JSON content from the installer descriptor file');
-    exit;
-}
-
-$logger->info('Installer descriptor file loaded');
+$script = require __DIR__ . "/scripts/{$query['script']}.php";
+$logger->info("Installer script '{$query['script']}' loaded");
 
 try
 {
-    $installer = new Sytesbook\WPWedding\Deploy\Installer($descriptor, $logger);
-    $success = $installer->execute();
+    $wwwRoot = dirname(__DIR__, 3);
+    $packageId = basename(__DIR__);
+
+    $installer = new Sytesbook\WPWedding\Deploy\Installer($script, $logger);
+    $success = $installer->execute([
+        'package_id' => $packageId,
+        'deployment_folder' => "{$wwwRoot}/{$query['deployment_folder']}",
+        'domain_folder' => "{$wwwRoot}/{$query['domain_folder']}",
+    ]);
 
     if (!$success)
     {
         http_response_code(500);
-        $logger->error('Installer failed');
+        $logger->error("Installer script '{$query['script']}' failed");
         exit;
     }
 
-    $logger->info('Installer executed successfully');
+    $logger->info("Installer script '{$query['script']}' executed successfully");
     http_response_code(200);
     exit;
 }
