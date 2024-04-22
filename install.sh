@@ -22,5 +22,10 @@ if [[ $response_code != "200" ]]; then
     exit 1
 fi
 echo "  Done"
+echo "  Output:"
+for (( i=0; i<=$last_line_index; i++))
+do
+    echo "    ${output[$i]}"
+done
 
 exit 0
