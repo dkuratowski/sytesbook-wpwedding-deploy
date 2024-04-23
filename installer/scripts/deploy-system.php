@@ -45,7 +45,7 @@ return [
             'title' => 'Setup symbolic links',
             'executor' => SymlinkSetup::class,
             'params'=> [
-                'symlink' => [
+                'symlinks' => [
                     // Deployment folder
                     '{deployment_folder}/wp/migrations' => '{deployment_folder}/migrations',
                     '{deployment_folder}/wp/uploads' => '{deployment_folder}/uploads',

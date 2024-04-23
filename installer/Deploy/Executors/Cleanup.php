@@ -50,6 +50,7 @@ class Cleanup
                 }
             }
         }
+        
         return true;
     }
 
@@ -65,21 +66,35 @@ class Cleanup
 
     private function deleteFolder(string $path): void
     {
-        // TODO
+        $iterator = new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::SKIP_DOTS);
+        $files = new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::CHILD_FIRST);
+        foreach($files as $file)
+        {
+            if ($file->isDir())
+            {
+                rmdir($file->getPathname());
+            }
+            else
+            {
+                unlink($file->getPathname());
+            }
+        }
+        rmdir($path);
+
         $baseName = basename($path);
         $this->logger->info("     folder '{$baseName}' deleted");
     }
 
     private function deleteFile(string $path): void
     {
-        // TODO
+        unlink($path);
         $baseName = basename($path);
         $this->logger->info("     file '{$baseName}' deleted");
     }
 
     private function deleteSymlink(string $path): void
     {
-        // TODO
+        unlink($path);
         $baseName = basename($path);
         $this->logger->info("     symlink '{$baseName}' deleted");
     }
