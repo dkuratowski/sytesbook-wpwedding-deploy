@@ -32,15 +32,15 @@ return [
                 ]
             ]
         ],
-        [
-            'title' => 'Extract package',
-            'executor' => Extract::class,
-            'params'=> [
-                'extract' => [
-                    '{deployment_folder}/package_{package_id}.zip' => '{deployment_folder}'
-                ]
-            ]
-        ],
+        // [
+        //     'title' => 'Extract package',
+        //     'executor' => Extract::class,
+        //     'params'=> [
+        //         'extract' => [
+        //             '{deployment_folder}/package_{package_id}.zip' => '{deployment_folder}'
+        //         ]
+        //     ]
+        // ],
         // [
         //     'title' => 'Setup symbolic links',
         //     'executor' => SymlinkSetup::class,
