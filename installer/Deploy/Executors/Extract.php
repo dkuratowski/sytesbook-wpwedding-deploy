@@ -1,6 +1,6 @@
 <?php
 
-namespace Sytesbook\WPWedding\Deploy\Scripts;
+namespace Sytesbook\WPWedding\Deploy\Executors;
 
 use Monolog\Logger;
 

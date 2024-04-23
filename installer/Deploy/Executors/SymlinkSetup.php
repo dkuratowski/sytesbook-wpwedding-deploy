@@ -1,10 +1,10 @@
 <?php
 
-namespace Sytesbook\WPWedding\Deploy\Scripts;
+namespace Sytesbook\WPWedding\Deploy\Executors;
 
 use Monolog\Logger;
 
-class Cleanup
+class SymlinkSetup
 {
     private array $params;
     private Logger $logger;
@@ -17,7 +17,7 @@ class Cleanup
 
     public function execute(array $context): bool
     {
-        $this->logger->info("  -> Hello Cleanup", $this->params);
+        $this->logger->info("  -> Hello SymlinkSetup", $this->params);
         return true;
     }
 }

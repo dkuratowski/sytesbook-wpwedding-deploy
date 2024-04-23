@@ -1,8 +1,8 @@
 <?php
 
-use Sytesbook\WPWedding\Deploy\Scripts\Cleanup;
-use Sytesbook\WPWedding\Deploy\Scripts\Extract;
-use Sytesbook\WPWedding\Deploy\Scripts\SymlinkSetup;
+use Sytesbook\WPWedding\Deploy\Executors\Cleanup;
+use Sytesbook\WPWedding\Deploy\Executors\Extract;
+use Sytesbook\WPWedding\Deploy\Executors\SymlinkSetup;
 use Sytesbook\WPWedding\Deploy\FileSystem\Filters\Folder;
 use Sytesbook\WPWedding\Deploy\FileSystem\Filters\EnvFile;
 use Sytesbook\WPWedding\Deploy\FileSystem\Filters\File;
@@ -24,10 +24,7 @@ return [
                         new EnvFile(),
                         new File('version.json'),
                         new File('.ftp-deploy-sync-state.json'),
-                        new PackageZipFile(
-                            [],                 // include every package
-                            ['{package_id}']    // exclude the current package
-                        )
+                        new PackageZipFile(['{package_id}'])    // except the current package
                     ],
                     '{domain_folder}' => [
                         new SymbolicLink()
@@ -73,10 +70,7 @@ return [
                 'delete' => [
                     '{deployment_folder}' => [
                         new File('.ftp-deploy-sync-state.json'),
-                        new PackageZipFile(
-                            [],     // include every package
-                            []      // don't exclude any package
-                        )
+                        new PackageZipFile()
                     ],
                     '{domain_folder}' => [
                         new Folder('installer')
