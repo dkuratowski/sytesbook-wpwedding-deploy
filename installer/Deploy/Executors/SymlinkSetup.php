@@ -34,7 +34,8 @@ class SymlinkSetup
             $success = symlink($symlinkTargetPath, $symlinkSourcePath);
             if (!$success)
             {
-                $this->logger->error("     Symlink could not be created");
+                $errorInfo = error_get_last();
+                $this->logger->error("     Symlink could not be created", $errorInfo ?? []);
                 return false;
             }
         }
