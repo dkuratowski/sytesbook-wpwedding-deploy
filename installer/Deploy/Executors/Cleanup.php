@@ -5,6 +5,8 @@ namespace Sytesbook\WPWedding\Deploy\Executors;
 use Monolog\Logger;
 use Sytesbook\WPWedding\Deploy\Utils\StringTemplate;
 use Exception;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 class Cleanup
 {
@@ -50,7 +52,7 @@ class Cleanup
                 }
             }
         }
-        
+
         return true;
     }
 
