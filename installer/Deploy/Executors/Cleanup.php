@@ -36,7 +36,6 @@ class Cleanup
 
             foreach ($this->applyFilters($path, $filters, $context) as $pathToDelete)
             {
-                $baseName = basename($pathToDelete);
                 if (!is_link($pathToDelete) && is_dir($pathToDelete))
                 {
                     $this->deleteFolder($pathToDelete);
@@ -67,18 +66,21 @@ class Cleanup
     private function deleteFolder(string $path): void
     {
         // TODO
+        $baseName = basename($path);
         $this->logger->info("     folder '{$baseName}' deleted");
     }
 
     private function deleteFile(string $path): void
     {
         // TODO
+        $baseName = basename($path);
         $this->logger->info("     file '{$baseName}' deleted");
     }
 
     private function deleteSymlink(string $path): void
     {
         // TODO
+        $baseName = basename($path);
         $this->logger->info("     symlink '{$baseName}' deleted");
     }
 }
