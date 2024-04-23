@@ -3,6 +3,8 @@
 namespace Sytesbook\WPWedding\Deploy\Executors;
 
 use Monolog\Logger;
+use Sytesbook\WPWedding\Deploy\Utils\StringTemplate;
+use Exception;
 use ZipArchive;
 
 class Extract
