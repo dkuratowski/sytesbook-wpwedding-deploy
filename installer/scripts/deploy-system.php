@@ -47,7 +47,7 @@ return [
             'params'=> [
                 'symlinks' => [
                     // Deployment folder
-                    '{deployment_folder}/wp/migrations' => '{deployment_folder}/migrations',
+                    '{deployment_folder}/wp/migrations' => '{deployment_folder}/src/migrations',
                     '{deployment_folder}/wp/uploads' => '{deployment_folder}/uploads',
                     '{deployment_folder}/wp/wp-content' => '{deployment_folder}/src/wp-content',
                     '{deployment_folder}/wp/wp-config.php' => '{deployment_folder}/src/wp-config.php',
@@ -55,7 +55,7 @@ return [
                     // Domain folder
                     '{domain_folder}/uploads' => '{deployment_folder}/uploads',
                     '{domain_folder}/wp-admin' => '{deployment_folder}/wp/wp-admin',
-                    '{domain_folder}/wp-content' => '{deployment_folder}/wp/wp-content',
+                    '{domain_folder}/wp-content' => '{deployment_folder}/src/wp-content',
                     '{domain_folder}/wp-includes' => '{deployment_folder}/wp/wp-includes',
                     '{domain_folder}/wp-login.php' => '{deployment_folder}/wp/wp-login.php',
                     '{domain_folder}/index.php' => '{deployment_folder}/wp/index.php',
