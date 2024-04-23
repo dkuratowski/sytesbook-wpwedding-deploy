@@ -59,7 +59,7 @@ class Cleanup
         $result = [];
         foreach ($filters as $filter)
         {
-            array_push(...$filter->apply($path, $context));
+            array_push($result, ...$filter->apply($path, $context));
         }
         return $result;
     }
