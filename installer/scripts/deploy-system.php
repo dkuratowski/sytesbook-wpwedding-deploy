@@ -41,42 +41,42 @@ return [
                 ]
             ]
         ],
-        [
-            'title' => 'Setup symbolic links',
-            'executor' => SymlinkSetup::class,
-            'params'=> [
-                'symlinks' => [
-                    // Deployment folder
-                    '{deployment_folder}/wp/migrations' => '{deployment_folder}/src/migrations',
-                    '{deployment_folder}/wp/uploads' => '{deployment_folder}/uploads',
-                    '{deployment_folder}/wp/wp-content' => '{deployment_folder}/src/wp-content',
-                    '{deployment_folder}/wp/wp-config.php' => '{deployment_folder}/src/wp-config.php',
+        // [
+        //     'title' => 'Setup symbolic links',
+        //     'executor' => SymlinkSetup::class,
+        //     'params'=> [
+        //         'symlinks' => [
+        //             // Deployment folder
+        //             '{deployment_folder}/wp/migrations' => '{deployment_folder}/src/migrations',
+        //             '{deployment_folder}/wp/uploads' => '{deployment_folder}/uploads',
+        //             '{deployment_folder}/wp/wp-content' => '{deployment_folder}/src/wp-content',
+        //             '{deployment_folder}/wp/wp-config.php' => '{deployment_folder}/src/wp-config.php',
 
-                    // Domain folder
-                    '{domain_folder}/uploads' => '{deployment_folder}/uploads',
-                    '{domain_folder}/wp-admin' => '{deployment_folder}/wp/wp-admin',
-                    '{domain_folder}/wp-content' => '{deployment_folder}/src/wp-content',
-                    '{domain_folder}/wp-includes' => '{deployment_folder}/wp/wp-includes',
-                    '{domain_folder}/wp-login.php' => '{deployment_folder}/wp/wp-login.php',
-                    '{domain_folder}/index.php' => '{deployment_folder}/wp/index.php',
-                    '{domain_folder}/.htaccess' => '{deployment_folder}/wp/.htaccess',
-                ]
-            ]
-        ],
-        [
-            'title' => 'Post-deploy cleanup',
-            'executor' => Cleanup::class,
-            'params'=> [
-                'delete' => [
-                    '{deployment_folder}' => [
-                        new File('.ftp-deploy-sync-state.json'),
-                        new PackageZipFile()
-                    ],
-                    '{domain_folder}' => [
-                        new Folder('installer')
-                    ]
-                ]
-            ]
-        ],
+        //             // Domain folder
+        //             '{domain_folder}/uploads' => '{deployment_folder}/uploads',
+        //             '{domain_folder}/wp-admin' => '{deployment_folder}/wp/wp-admin',
+        //             '{domain_folder}/wp-content' => '{deployment_folder}/src/wp-content',
+        //             '{domain_folder}/wp-includes' => '{deployment_folder}/wp/wp-includes',
+        //             '{domain_folder}/wp-login.php' => '{deployment_folder}/wp/wp-login.php',
+        //             '{domain_folder}/index.php' => '{deployment_folder}/wp/index.php',
+        //             '{domain_folder}/.htaccess' => '{deployment_folder}/wp/.htaccess',
+        //         ]
+        //     ]
+        // ],
+        // [
+        //     'title' => 'Post-deploy cleanup',
+        //     'executor' => Cleanup::class,
+        //     'params'=> [
+        //         'delete' => [
+        //             '{deployment_folder}' => [
+        //                 new File('.ftp-deploy-sync-state.json'),
+        //                 new PackageZipFile()
+        //             ],
+        //             '{domain_folder}' => [
+        //                 new Folder('installer')
+        //             ]
+        //         ]
+        //     ]
+        // ],
     ]
 ];
