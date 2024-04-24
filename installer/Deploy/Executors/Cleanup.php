@@ -30,7 +30,7 @@ class Cleanup
         {
             $path = (new StringTemplate($pathTemplate))->resolve($context);
             $this->logger->info("  -> Cleanup {$path}");
-            if (!file_exists($path) || !is_dir($path))
+            if (!file_exists($path) || is_link($path) || !is_dir($path))
             {
                 $this->logger->error("     doesn't exist or is not a folder");
                 return false;
@@ -38,17 +38,10 @@ class Cleanup
 
             foreach ($this->applyFilters($path, $filters, $context) as $pathToDelete)
             {
-                if (!is_link($pathToDelete) && is_dir($pathToDelete))
+                $success = $this->delete($pathToDelete);
+                if (!$success)
                 {
-                    $this->deleteFolder($pathToDelete);
-                }
-                else if (!is_link($pathToDelete) && is_file($pathToDelete))
-                {
-                    $this->deleteFile($pathToDelete);
-                }
-                else if (is_link($pathToDelete))
-                {
-                    $this->deleteSymlink($pathToDelete);
+                    return false;
                 }
             }
         }
@@ -66,38 +59,81 @@ class Cleanup
         return $result;
     }
 
-    private function deleteFolder(string $path): void
+    private function delete(string $path): bool
     {
-        $iterator = new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::SKIP_DOTS);
-        $files = new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::CHILD_FIRST);
-        foreach($files as $file)
+        if (is_link($path))
         {
-            if ($file->isDir())
+            return $this->deleteSymlink($path);
+        }
+        else
+        {
+            if (is_dir($path))
             {
-                rmdir($file->getPathname());
+                return $this->deleteFolder($path);
+            }
+            else if (is_file($path))
+            {
+                return $this->deleteFile($path);
             }
             else
             {
-                unlink($file->getPathname());
+                $this->logger->error("     unknown file system object type: {$path}");
+                return false;
             }
         }
-        rmdir($path);
-
-        $baseName = basename($path);
-        $this->logger->info("     folder '{$baseName}' deleted");
     }
 
-    private function deleteFile(string $path): void
+    private function deleteFile(string $path): bool
     {
-        unlink($path);
-        $baseName = basename($path);
-        $this->logger->info("     file '{$baseName}' deleted");
+        $success = unlink($path);
+        if (!$success)
+        {
+            $errorInfo = error_get_last();
+            $this->logger->error("     file could not be deleted: {$path}", $errorInfo ?? []);
+            return false;
+        }
+
+        $this->logger->info("     file deleted: {$path}");
+        return true;
     }
 
-    private function deleteSymlink(string $path): void
+    private function deleteSymlink(string $path): bool
     {
-        unlink($path);
-        $baseName = basename($path);
-        $this->logger->info("     symlink '{$baseName}' deleted");
+        $success = unlink($path);
+        if (!$success)
+        {
+            $errorInfo = error_get_last();
+            $this->logger->error("     symlink could not be deleted: {$path}", $errorInfo ?? []);
+            return false;
+        }
+
+        $this->logger->info("     symlink deleted: {$path}");
+        return true;
+    }
+
+    private function deleteFolder(string $path): bool
+    {
+        foreach (scandir($path) as $child)
+        {
+            if ($child !== '.' && $child !== '..')
+            {
+                $success = $this->delete("{$path}/{$child}");
+                if (!$success)
+                {
+                    return false;
+                }
+            }
+        }
+
+        $success = unlink($path);
+        if (!$success)
+        {
+            $errorInfo = error_get_last();
+            $this->logger->error("     folder could not be deleted: {$path}", $errorInfo ?? []);
+            return false;
+        }
+
+        $this->logger->info("     folder deleted: {$path}");
+        return true;
     }
 }
