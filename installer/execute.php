@@ -1,13 +1,39 @@
 <?php
 
+// Extracting installer files
+echo("On-site installer started" . PHP_EOL);
+echo("Extracting installer.zip" . PHP_EOL);
+$zipArchive = new ZipArchive();
+$openResult = $zipArchive->open(__DIR__ . '/installer.zip');
+if (!$openResult)
+{
+    http_response_code(500);
+    echo("ERROR: installer.zip file could not be opened" . PHP_EOL);
+    exit;
+}
+
+$extractResult = $zipArchive->extractTo(__DIR__);
+if (!$extractResult)
+{
+    $zipArchive->close();
+    http_response_code(500);
+    echo("ERROR: installer.zip file could not be extracted" . PHP_EOL);
+    exit;
+}
+$zipArchive->close();
+echo("Success" . PHP_EOL);
+echo("-------------------------------------------------------------------" . PHP_EOL);
+
 // Load Composer's autoloader
 require_once(__DIR__ . '/vendor/autoload.php');
 
+// Setup logger
 $logger = new Monolog\Logger(
     'wpwedding-deploy',
     [new Monolog\Handler\StreamHandler('php://output', Monolog\Level::Debug)]
 );
 
+// Execute installer
 try
 {
     $query = Sytesbook\WPWedding\Deploy\Utils\Query::check(

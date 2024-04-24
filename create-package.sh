@@ -9,16 +9,6 @@ echo "  Package ID: $package_id"
 echo "  Done"
 
 
-echo "* Preparing on-site installer scripts for deployment"
-mkdir -p ./installer/$package_id
-touch ./installer/index.php
-echo "<?php /* Silence is golden */ ?>" > ./installer/index.php
-cp -r ./repos/sytesbook-wpwedding-deploy/installer/* ./installer/$package_id
-rm ./installer/$package_id/composer.json
-rm ./installer/$package_id/composer.lock
-echo "  Done"
-
-
 echo "* Removing unnecessary files and symbolic links created by composer"
 rm -r ./repos/sytesbook-wpwedding/wp/migrations
 rm -r ./repos/sytesbook-wpwedding/wp/uploads
@@ -37,22 +27,23 @@ echo "  Done"
 
 
 echo "* Creating version.json"
-cd ./repos/sytesbook-wpwedding
-touch version.json
+touch ./repos/sytesbook-wpwedding/version.json
 echo "{" >> version.json
-echo "  \"revision\": \"$(git rev-parse HEAD)\"," >> version.json
-echo "  \"branch\": \"$(git rev-parse --abbrev-ref HEAD)\"" >> version.json
-echo "}" >> version.json
-echo "$(cat version.json)"
+echo "  \"revision\": \"$(git rev-parse HEAD)\"," >> ./repos/sytesbook-wpwedding/version.json
+echo "  \"branch\": \"$(git rev-parse --abbrev-ref HEAD)\"" >> ./repos/sytesbook-wpwedding/version.json
+echo "}" >> ./repos/sytesbook-wpwedding/version.json
+echo "$(cat ./repos/sytesbook-wpwedding/version.json)"
 echo "  Done"
 
 
 echo "* Decrypting .env.vault"
-node ../sytesbook-wpwedding-deploy/decrypt-env.js .env.vault .env
+node ./repos/sytesbook-wpwedding-deploy/decrypt-env.js .env.vault .env
 echo "  Done"
 
 
 echo "* Creating ZIP file for deployment"
-mkdir ../../package
+mkdir ./package
+cd ./repos/sytesbook-wpwedding
 zip -r "../../package/package_$package_id.zip" src vendor wp .env version.json
+cd ../..
 echo "  Package created"

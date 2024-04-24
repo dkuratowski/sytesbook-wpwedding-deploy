@@ -1,4 +1,4 @@
-name: "Deploy Sytesbook WPWedding"
+name: "Deploy system"
 
 on:
   workflow_dispatch:
@@ -105,7 +105,11 @@ jobs:
         local-dir: ./package/
         server-dir: "${{ vars.DEPLOYMENT_FOLDER_ON_SERVER }}/"
 
-    - name: Deploy on-site installer scripts to the webserver
+    - name: Prepare on-site installer
+      run: |
+        ./repos/sytesbook-wpwedding-deploy/prepare-installer.sh ${{ steps.create_package.outputs.package_id }}
+
+    - name: Deploy on-site installer to the webserver
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
         server: ${{ vars.FTP_SERVER }}
@@ -114,6 +118,6 @@ jobs:
         local-dir: ./installer/
         server-dir: "${{ vars.DOMAIN_FOLDER_ON_SERVER }}/installer/"
 
-    - name: Install
+    - name: Execute on-site installer
       run: |
         ./repos/sytesbook-wpwedding-deploy/install.sh deploy-system ${{ vars.DOMAIN_NAME }} ${{ steps.create_package.outputs.package_id }} ${{ vars.DEPLOYMENT_FOLDER_ON_SERVER }} ${{ vars.DOMAIN_FOLDER_ON_SERVER }}
