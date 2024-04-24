@@ -27,17 +27,19 @@ echo "  Done"
 
 
 echo "* Creating version.json"
-touch ./repos/sytesbook-wpwedding/version.json
+cd ./repos/sytesbook-wpwedding
+touch version.json
 echo "{" >> version.json
-echo "  \"revision\": \"$(git rev-parse HEAD)\"," >> ./repos/sytesbook-wpwedding/version.json
-echo "  \"branch\": \"$(git rev-parse --abbrev-ref HEAD)\"" >> ./repos/sytesbook-wpwedding/version.json
-echo "}" >> ./repos/sytesbook-wpwedding/version.json
-echo "$(cat ./repos/sytesbook-wpwedding/version.json)"
+echo "  \"revision\": \"$(git rev-parse HEAD)\"," >> version.json
+echo "  \"branch\": \"$(git rev-parse --abbrev-ref HEAD)\"" >> version.json
+echo "}" >> version.json
+echo "$(cat version.json)"
+cd ../..
 echo "  Done"
 
 
 echo "* Decrypting .env.vault"
-node ./repos/sytesbook-wpwedding-deploy/decrypt-env.js .env.vault .env
+node ./repos/sytesbook-wpwedding-deploy/decrypt-env.js ./repos/sytesbook-wpwedding/.env.vault ./repos/sytesbook-wpwedding/.env
 echo "  Done"
 
 
