@@ -120,4 +120,4 @@ jobs:
 
     - name: Execute on-site installer
       run: |
-        ./repos/sytesbook-wpwedding-deploy/install.sh deploy-system ${{ vars.DOMAIN_NAME }} ${{ steps.create_package.outputs.package_id }} ${{ vars.DEPLOYMENT_FOLDER_ON_SERVER }} ${{ vars.DOMAIN_FOLDER_ON_SERVER }}
+        ./repos/sytesbook-wpwedding-deploy/execute-installer.sh deploy-system ${{ vars.DOMAIN_NAME }} ${{ steps.create_package.outputs.package_id }} ${{ vars.DEPLOYMENT_FOLDER_ON_SERVER }} ${{ vars.DOMAIN_FOLDER_ON_SERVER }}
