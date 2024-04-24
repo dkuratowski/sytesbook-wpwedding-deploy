@@ -47,7 +47,6 @@ return [
             'params'=> [
                 'symlinks' => [
                     // Deployment folder
-                    '{deployment_folder}/wp/migrations' => '{deployment_folder}/src/migrations',
                     '{deployment_folder}/wp/uploads' => '{deployment_folder}/uploads',
                     '{deployment_folder}/wp/wp-content' => '{deployment_folder}/src/wp-content',
                     '{deployment_folder}/wp/wp-config.php' => '{deployment_folder}/src/wp-config.php',
