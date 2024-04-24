@@ -59,21 +59,21 @@ class Cleanup
         return $result;
     }
 
-    private function delete(string $path): bool
+    private function delete(string $path, bool $silentOnSuccess = false): bool
     {
         if (is_link($path))
         {
-            return $this->deleteSymlink($path);
+            return $this->deleteSymlink($path, $silentOnSuccess);
         }
         else
         {
             if (is_dir($path))
             {
-                return $this->deleteFolder($path);
+                return $this->deleteFolder($path, $silentOnSuccess);
             }
             else if (is_file($path))
             {
-                return $this->deleteFile($path);
+                return $this->deleteFile($path, $silentOnSuccess);
             }
             else
             {
@@ -83,7 +83,7 @@ class Cleanup
         }
     }
 
-    private function deleteFile(string $path): bool
+    private function deleteFile(string $path, bool $silentOnSuccess = false): bool
     {
         $success = unlink($path);
         if (!$success)
@@ -93,11 +93,14 @@ class Cleanup
             return false;
         }
 
-        $this->logger->info("     file deleted: {$path}");
+        if (!$silentOnSuccess)
+        {
+            $this->logger->info("     file deleted: {$path}");
+        }
         return true;
     }
 
-    private function deleteSymlink(string $path): bool
+    private function deleteSymlink(string $path, bool $silentOnSuccess = false): bool
     {
         $success = unlink($path);
         if (!$success)
@@ -107,17 +110,20 @@ class Cleanup
             return false;
         }
 
-        $this->logger->info("     symlink deleted: {$path}");
+        if (!$silentOnSuccess)
+        {
+            $this->logger->info("     symlink deleted: {$path}");
+        }
         return true;
     }
 
-    private function deleteFolder(string $path): bool
+    private function deleteFolder(string $path, bool $silentOnSuccess = false): bool
     {
         foreach (scandir($path) as $child)
         {
             if ($child !== '.' && $child !== '..')
             {
-                $success = $this->delete("{$path}/{$child}");
+                $success = $this->delete("{$path}/{$child}", true);
                 if (!$success)
                 {
                     return false;
@@ -133,7 +139,10 @@ class Cleanup
             return false;
         }
 
-        $this->logger->info("     folder deleted: {$path}");
+        if (!$silentOnSuccess)
+        {
+            $this->logger->info("     folder deleted: {$path}");
+        }
         return true;
     }
 }
