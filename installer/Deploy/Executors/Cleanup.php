@@ -125,7 +125,7 @@ class Cleanup
             }
         }
 
-        $success = unlink($path);
+        $success = rmdir($path);
         if (!$success)
         {
             $errorInfo = error_get_last();
