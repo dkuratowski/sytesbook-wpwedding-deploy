@@ -1,13 +1,6 @@
 #!/bin/bash
 
-dontenv_key=$1
-
-echo "* Generate package ID"
-package_id=$(LC_CTYPE=C tr -dc A-Za-z0-9 < /dev/urandom | head -c 32 | xargs)
-echo "package_id=$package_id" >> $GITHUB_OUTPUT
-echo "  Package ID: $package_id"
-echo "  Done"
-
+package_id=$1
 
 echo "* Removing unnecessary files and symbolic links created by composer"
 rm -r ./repos/sytesbook-wpwedding/wp/uploads
