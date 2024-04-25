@@ -45,11 +45,18 @@ const requestBody = {
         }
     }
 };
-const response = await axios.post(
+
+axios.post(
     `https://${mainDomainName}/wp-json/wpwedding/v1/${modelCollection}/${modelUid}/admin/domain`,
     requestBody,
     { auth: { username: username, password: password } }
-);
+).then(response => {
+    console.log('Response');
+    console.log(response);
+    process.exit(0);
+}).catch(err => {
+    console.log('Error');
+    console.log(err);
+    process.exit(1);
+});
 
-console.log('Response');
-console.log(response);
