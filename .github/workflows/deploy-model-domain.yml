@@ -89,7 +89,7 @@ jobs:
         username: ${{ secrets.FTP_USER }}
         password: ${{ secrets.FTP_PASSWORD }}
         local-dir: ./installer/
-        server-dir: "${{ vars.MAIN_DOMAIN_FOLDER }}/installer/"
+        server-dir: "${{ inputs.model-domain-folder }}/installer/"
 
     - name: Execute on-site installer
       run: |
