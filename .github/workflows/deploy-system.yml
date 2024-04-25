@@ -1,4 +1,4 @@
-name: "Deploy Sytesbook WPWedding"
+name: "Deploy system"
 
 on:
   workflow_dispatch:
@@ -79,18 +79,27 @@ jobs:
       run: |
         npm install
         npm run build
+    
+    - name: "Composer install: sytesbook-wpwedding-deploy/installer"
+      working-directory: ./repos/sytesbook-wpwedding-deploy/installer
+      run: composer install
 
     - name: "NPM install: sytesbook-wpwedding-deploy"
       working-directory: ./repos/sytesbook-wpwedding-deploy
       run: |
         npm install
     
+    - name: "Generate package ID"
+      id: generate_package_id
+      run: |
+        ./repos/sytesbook-wpwedding-deploy/generate-id.sh
+    
     - name: "Create package"
       id: create_package
       env:
         DOTENV_KEY: ${{ secrets.DOTENV_VAULT_KEY }}
       run: |
-        ./repos/sytesbook-wpwedding-deploy/create-package.sh
+        ./repos/sytesbook-wpwedding-deploy/create-package.sh ${{ steps.generate_package_id.outputs.generated_id }}
 
     - name: Deploy package to the webserver
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -99,17 +108,21 @@ jobs:
         username: ${{ secrets.FTP_USER }}
         password: ${{ secrets.FTP_PASSWORD }}
         local-dir: ./package/
-        server-dir: "${{ vars.DEPLOYMENT_FOLDER_ON_SERVER }}/"
+        server-dir: "${{ vars.DEPLOYMENT_FOLDER }}/"
 
-    - name: Deploy on-site installer scripts to the webserver
+    - name: Prepare on-site installer
+      run: |
+        ./repos/sytesbook-wpwedding-deploy/prepare-installer.sh ${{ steps.generate_package_id.outputs.generated_id }}
+
+    - name: Deploy on-site installer to the webserver
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
         server: ${{ vars.FTP_SERVER }}
         username: ${{ secrets.FTP_USER }}
         password: ${{ secrets.FTP_PASSWORD }}
         local-dir: ./installer/
-        server-dir: "${{ vars.DOMAIN_FOLDER_ON_SERVER }}/installer/"
+        server-dir: "${{ vars.MAIN_DOMAIN_FOLDER }}/installer/"
 
-    - name: Install
+    - name: Execute on-site installer
       run: |
-        ./repos/sytesbook-wpwedding-deploy/install.sh ${{ vars.DOMAIN_NAME }} ${{ steps.create_package.outputs.package_id }} ${{ vars.DEPLOYMENT_FOLDER_ON_SERVER }} ${{ vars.DOMAIN_FOLDER_ON_SERVER }}
+        ./repos/sytesbook-wpwedding-deploy/execute-installer.sh deploy-system ${{ vars.MAIN_DOMAIN_NAME }} ${{ steps.generate_package_id.outputs.generated_id }} ${{ vars.DEPLOYMENT_FOLDER }} ${{ vars.MAIN_DOMAIN_FOLDER }}
