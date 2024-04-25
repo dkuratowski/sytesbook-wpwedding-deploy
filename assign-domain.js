@@ -45,11 +45,15 @@ const requestBody = {
         }
     }
 };
+const config = {
+    auth: { username: username, password: password },
+    headers: { 'X-HTTP-Method-Override': 'PUT' }
+};
 
 axios.post(
     `https://${mainDomainName}/wp-json/wpwedding/v1/${modelCollection}/${modelUid}/admin/domain`,
     requestBody,
-    { auth: { username: username, password: password } }
+    config
 ).then(response => {
     console.log('Response');
     console.log(response);
