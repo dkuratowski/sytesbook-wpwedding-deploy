@@ -1,0 +1,21 @@
+name: "Deploy model domain"
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        description: Select the environment
+        required: true
+        options:
+          - staging
+          - production
+
+jobs:
+  deploy-model-domain:
+    runs-on: ubuntu-latest
+    environment: 
+      name: ${{ inputs.environment }}
+    steps:
+    - name: Placeholder
+      run: echo "placeholder"
