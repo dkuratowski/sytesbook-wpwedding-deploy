@@ -52,7 +52,6 @@ console.log('Sending request to /admin/soft-delete:', requestBody);
 
 const config = {
     auth: { username: username, password: password },
-    headers: { 'X-HTTP-Method-Override': 'POST' }
 };
 
 axios.post(
