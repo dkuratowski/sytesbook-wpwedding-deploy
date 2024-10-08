@@ -31,7 +31,12 @@ const modelCollection = process.argv[2];
 const modelUid = process.argv[3];
 const deletionTime = process.argv[4];
 
-console.log('deletionTime:', deletionTime);
+if (deletionTime !== null) {
+    console.log('deletionTime:', deletionTime);
+}
+else {
+    console.log('deletionTime: null');
+}
 
 // const requestBody = {
 //     data: {
