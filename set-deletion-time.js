@@ -20,48 +20,46 @@ if (!process.argv[3]) {
     process.exit(1);
 }
 
-if (!process.argv[4]) {
-    console.log("Missing parameter: deletion time");
-    process.exit(1);
-}
-
 const username = process.env['OPERATOR_USERNAME'];
 const password = process.env['OPERATOR_PASSWORD'];
 const modelCollection = process.argv[2];
 const modelUid = process.argv[3];
-const deletionTime = process.argv[4];
+const deletionTime = process.argv[4] ?? null;
 
-if (deletionTime !== null) {
-    console.log('deletionTime:', deletionTime);
+let requestBody = null;
+if (deletionTime === null) {
+    requestBody = {
+        data: {
+            deletedAt: null
+        }
+    };
 }
-else {
-    console.log('deletionTime: null');
+else if (deletionTime !== 'now') {
+    requestBody = {
+        data: {
+            deletedAt: deletionTime
+        }
+    };
 }
 
-// const requestBody = {
-//     data: {
-//         type: "domain",
-//         body: {
-//             domain: modelDomainName
-//         }
-//     }
-// };
-// const config = {
-//     auth: { username: username, password: password },
-//     headers: { 'X-HTTP-Method-Override': 'PUT' }
-// };
+console.log('Sending request to /admin/soft-delete:', requestBody);
 
-// axios.post(
-//     `https://${mainDomainName}/wp-json/wpwedding/v1/${modelCollection}/${modelUid}/admin/domain`,
-//     requestBody,
-//     config
-// ).then(response => {
-//     console.log('Response');
-//     console.log(response);
-//     process.exit(0);
-// }).catch(err => {
-//     console.log('Error');
-//     console.log(err);
-//     process.exit(1);
-// });
+const config = {
+    auth: { username: username, password: password },
+    headers: { 'X-HTTP-Method-Override': 'PUT' }
+};
+
+axios.post(
+    `https://${mainDomainName}/wp-json/wpwedding/v1/${modelCollection}/${modelUid}/admin/soft-delete`,
+    requestBody,
+    config
+).then(response => {
+    console.log('Response');
+    console.log(response);
+    process.exit(0);
+}).catch(err => {
+    console.log('Error');
+    console.log(err);
+    process.exit(1);
+});
 
