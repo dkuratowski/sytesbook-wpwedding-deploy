@@ -64,4 +64,4 @@ jobs:
         OPERATOR_USERNAME: ${{ inputs.operator-username }}
         OPERATOR_PASSWORD: ${{ inputs.operator-application-password }}
       run: |
-        node ./repos/sytesbook-wpwedding-deploy/set-deletion-time.js ${{ inputs.model-collection }} ${{ inputs.model-uid }} ${{ inputs.deletion-time }}
+        node ./repos/sytesbook-wpwedding-deploy/set-deletion-time.js ${{ vars.MAIN_DOMAIN_NAME }} ${{ inputs.model-collection }} ${{ inputs.model-uid }} ${{ inputs.deletion-time }}

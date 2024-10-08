@@ -11,20 +11,26 @@ if (!('OPERATOR_PASSWORD' in process.env)) {
 }
 
 if (!process.argv[2]) {
-    console.log("Missing parameter: model collection");
+    console.log("Missing parameter: main domain name");
     process.exit(1);
 }
 
 if (!process.argv[3]) {
+    console.log("Missing parameter: model collection");
+    process.exit(1);
+}
+
+if (!process.argv[4]) {
     console.log("Missing parameter: model UID");
     process.exit(1);
 }
 
 const username = process.env['OPERATOR_USERNAME'];
 const password = process.env['OPERATOR_PASSWORD'];
-const modelCollection = process.argv[2];
-const modelUid = process.argv[3];
-const deletionTime = process.argv[4] ?? null;
+const mainDomainName = process.argv[2];
+const modelCollection = process.argv[3];
+const modelUid = process.argv[4];
+const deletionTime = process.argv[5] ?? null;
 
 let requestBody = null;
 if (deletionTime === null) {
