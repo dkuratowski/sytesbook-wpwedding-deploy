@@ -1,4 +1,5 @@
 const axios = require('axios');
+const https = require('node:https');
 
 if (!('OPERATOR_USERNAME' in process.env)) {
     console.log("Missing environment variable: OPERATOR_USERNAME");
@@ -52,6 +53,8 @@ console.log('Sending request to /admin/soft-delete:', requestBody);
 
 const config = {
     auth: { username: username, password: password },
+    httpAgent: new https.Agent({ keepAlive: true }),
+    httpsAgent: new https.Agent({ keepAlive: true }),
 };
 
 axios.post(
