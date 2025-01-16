@@ -1,5 +1,3 @@
-const axios = require('axios');
-
 if (!('OPERATOR_USERNAME' in process.env)) {
     console.log("Missing environment variable: OPERATOR_USERNAME");
     process.exit(1);
@@ -45,15 +43,16 @@ const requestBody = {
         }
     }
 };
-const config = {
-    auth: { username: username, password: password },
-    headers: { 'X-HTTP-Method-Override': 'PUT' }
-};
 
-axios.post(
-    `https://${mainDomainName}/wp-json/wpwedding/v1/${modelCollection}/${modelUid}/admin/domain`,
-    requestBody,
-    config
+fetch(
+    `https://${mainDomainName}/wp-json/wpwedding/v1/${modelCollection}/${modelUid}/admin/domain`, {
+        method: 'POST',
+        body: JSON.stringify(requestBody),
+        headers: [
+            ['Authorization', `Basic ${Buffer.from(`${username}:${password}`, "utf-8").toString("base64")}`],
+            ['X-HTTP-Method-Override', 'PUT']
+        ]
+    }
 ).then(response => {
     console.log('Response');
     console.log(response);
@@ -63,4 +62,3 @@ axios.post(
     console.log(err);
     process.exit(1);
 });
-

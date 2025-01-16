@@ -1,6 +1,3 @@
-// const axios = require('axios');
-const https = require('node:https');
-
 if (!('OPERATOR_USERNAME' in process.env)) {
     console.log("Missing environment variable: OPERATOR_USERNAME");
     process.exit(1);
@@ -51,12 +48,6 @@ else if (deletionTime !== 'now') {
 
 console.log('Sending request to /admin/soft-delete:', requestBody);
 
-// const config = {
-//     auth: { username: username, password: password },
-//     httpAgent: new https.Agent({ keepAlive: true }),
-//     httpsAgent: new https.Agent({ keepAlive: true }),
-// };
-
 fetch(
     `https://${mainDomainName}/wp-json/wpwedding/v1/${modelCollection}/${modelUid}/admin/soft-delete`, {
         method: 'POST',
@@ -72,18 +63,3 @@ fetch(
     console.log(err);
     process.exit(1);
 });
-
-// axios.post(
-//     `https://${mainDomainName}/wp-json/wpwedding/v1/${modelCollection}/${modelUid}/admin/soft-delete`,
-//     requestBody,
-//     config
-// ).then(response => {
-//     console.log('Response');
-//     console.log(response);
-//     process.exit(0);
-// }).catch(err => {
-//     console.log('Error');
-//     console.log(err);
-//     process.exit(1);
-// });
-
