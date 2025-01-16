@@ -52,11 +52,21 @@ fetch(
     `https://${mainDomainName}/wp-json/wpwedding/v1/${modelCollection}/${modelUid}/admin/soft-delete`, {
         method: 'POST',
         body: JSON.stringify(requestBody),
-        headers: [['Authorization', `Basic ${Buffer.from(`${username}:${password}`, "utf-8").toString("base64")}`]]
+        headers: {
+            'Authorization': `Basic ${Buffer.from(`${username}:${password}`, "utf-8").toString("base64")}`
+        },
     }
 ).then(response => {
-    console.log('Response');
-    console.log(response);
+    if (!response.ok) {
+        process.exit(1);
+    }
+    response.json().then(
+        responseBody => {
+            console.log('Response');
+            console.log(responseBody);
+            process.exit(response.ok ? 0 : 1);
+        }
+    );
     process.exit(0);
 }).catch(err => {
     console.log('Error');
