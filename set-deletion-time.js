@@ -47,7 +47,6 @@ else if (deletionTime !== 'now') {
 }
 
 console.log('Sending request to /admin/soft-delete:', requestBody);
-
 fetch(
     `https://${mainDomainName}/wp-json/wpwedding/v1/${modelCollection}/${modelUid}/admin/soft-delete`, {
         method: 'POST',
@@ -57,6 +56,7 @@ fetch(
         },
     }
 ).then(response => {
+    console.log('Checking response body');
     response.json().then(
         responseBody => {
             console.log('Response');
@@ -70,3 +70,5 @@ fetch(
     console.log(err);
     process.exit(1);
 });
+
+console.log('Exiting script');
