@@ -57,9 +57,6 @@ fetch(
         },
     }
 ).then(response => {
-    if (!response.ok) {
-        process.exit(1);
-    }
     response.json().then(
         responseBody => {
             console.log('Response');
