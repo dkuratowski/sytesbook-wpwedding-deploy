@@ -1,4 +1,4 @@
-const axios = require('axios');
+// const axios = require('axios');
 const https = require('node:https');
 
 if (!('OPERATOR_USERNAME' in process.env)) {
@@ -51,16 +51,18 @@ else if (deletionTime !== 'now') {
 
 console.log('Sending request to /admin/soft-delete:', requestBody);
 
-const config = {
-    auth: { username: username, password: password },
-    httpAgent: new https.Agent({ keepAlive: true }),
-    httpsAgent: new https.Agent({ keepAlive: true }),
-};
+// const config = {
+//     auth: { username: username, password: password },
+//     httpAgent: new https.Agent({ keepAlive: true }),
+//     httpsAgent: new https.Agent({ keepAlive: true }),
+// };
 
-axios.post(
-    `https://${mainDomainName}/wp-json/wpwedding/v1/${modelCollection}/${modelUid}/admin/soft-delete`,
-    requestBody,
-    config
+fetch(
+    `https://${mainDomainName}/wp-json/wpwedding/v1/${modelCollection}/${modelUid}/admin/soft-delete`, {
+        method: 'POST',
+        body: JSON.stringify(requestBody),
+        headers: [['Authorization', `Basic ${Buffer.from(`${username}:${password}`, "utf-8").toString("base64")}`]]
+    }
 ).then(response => {
     console.log('Response');
     console.log(response);
@@ -70,4 +72,18 @@ axios.post(
     console.log(err);
     process.exit(1);
 });
+
+// axios.post(
+//     `https://${mainDomainName}/wp-json/wpwedding/v1/${modelCollection}/${modelUid}/admin/soft-delete`,
+//     requestBody,
+//     config
+// ).then(response => {
+//     console.log('Response');
+//     console.log(response);
+//     process.exit(0);
+// }).catch(err => {
+//     console.log('Error');
+//     console.log(err);
+//     process.exit(1);
+// });
 
