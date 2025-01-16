@@ -46,29 +46,29 @@ else if (deletionTime !== 'now') {
     };
 }
 
-console.log('Sending request to /admin/soft-delete:', requestBody);
-fetch(
-    `https://${mainDomainName}/wp-json/wpwedding/v1/${modelCollection}/${modelUid}/admin/soft-delete`, {
-        method: 'POST',
-        body: JSON.stringify(requestBody),
-        headers: {
-            'Authorization': `Basic ${Buffer.from(`${username}:${password}`, "utf-8").toString("base64")}`
-        },
-    }
-).then(response => {
-    console.log('Checking response body');
-    response.json().then(
-        responseBody => {
-            console.log('Response');
-            console.log(responseBody);
-            process.exit(response.ok ? 0 : 1);
-        }
-    );
-    process.exit(0);
-}).catch(err => {
-    console.log('Error');
-    console.log(err);
-    process.exit(1);
-});
+async function sendRequest() {
 
-console.log('Exiting script');
+    console.log('Sending request to /admin/soft-delete:', requestBody);
+
+    try {
+        const response = await fetch(`https://${mainDomainName}/wp-json/wpwedding/v1/${modelCollection}/${modelUid}/admin/soft-delete`, {
+            method: 'POST',
+            body: JSON.stringify(requestBody),
+            headers: {
+                'Authorization': `Basic ${Buffer.from(`${username}:${password}`, "utf-8").toString("base64")}`
+            },
+        });
+        const responseBody = await response.json();
+
+        console.log(`Response status: ${response.status} ${response.statusText}`);
+        console.log('Response:', responseBody);
+        process.exit(response.ok ? 0 : 1);
+    }
+    catch (error) {
+        console.log('Error:', error);
+        process.exit(1);
+    }
+}
+
+sendRequest();
+console.log('Unexpected exit');
