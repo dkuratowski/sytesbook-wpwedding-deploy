@@ -44,21 +44,36 @@ const requestBody = {
     }
 };
 
-fetch(
-    `https://${mainDomainName}/wp-json/wpwedding/v1/${modelCollection}/${modelUid}/admin/domain`, {
-        method: 'POST',
-        body: JSON.stringify(requestBody),
-        headers: [
-            ['Authorization', `Basic ${Buffer.from(`${username}:${password}`, "utf-8").toString("base64")}`],
-            ['X-HTTP-Method-Override', 'PUT']
-        ]
+async function sendRequest() {
+
+    const requestBodyStr = JSON.stringify(requestBody);
+    console.log('Sending request to /admin/domain:', requestBodyStr);
+
+    try {
+        const response = await fetch(`https://${mainDomainName}/wp-json/wpwedding/v1/${modelCollection}/${modelUid}/admin/domain`, {
+            method: 'POST',
+            body: requestBodyStr,
+            headers: {
+                'Authorization': `Basic ${Buffer.from(`${username}:${password}`, "utf-8").toString("base64")}`,
+                'Content-Type': 'application/json',
+                'X-HTTP-Method-Override': 'PUT',
+            },
+        });
+
+        console.log(`Response status: ${response.status} ${response.statusText}`);
+        if (response.ok) {
+            process.exit(0);
+        }
+        else {
+            const responseBody = await response.json();
+            console.log('Response:', responseBody);
+            process.exit(1);
+        }
     }
-).then(response => {
-    console.log('Response');
-    console.log(response);
-    process.exit(0);
-}).catch(err => {
-    console.log('Error');
-    console.log(err);
-    process.exit(1);
-});
+    catch (error) {
+        console.log('Error:', error);
+        process.exit(1);
+    }
+}
+
+sendRequest();
