@@ -48,12 +48,13 @@ else if (deletionTime !== 'now') {
 
 async function sendRequest() {
 
-    console.log('Sending request to /admin/soft-delete:', requestBody);
+    const requestBodyStr = JSON.stringify(requestBody);
+    console.log('Sending request to /admin/soft-delete:', requestBodyStr);
 
     try {
         const response = await fetch(`https://${mainDomainName}/wp-json/wpwedding/v1/${modelCollection}/${modelUid}/admin/soft-delete`, {
             method: 'POST',
-            body: JSON.stringify(requestBody),
+            body: requestBodyStr,
             headers: {
                 'Authorization': `Basic ${Buffer.from(`${username}:${password}`, "utf-8").toString("base64")}`
             },
