@@ -60,11 +60,16 @@ async function sendRequest() {
                 'Content-Type': 'application/json',
             },
         });
-        const responseBody = await response.json();
 
         console.log(`Response status: ${response.status} ${response.statusText}`);
-        console.log('Response:', responseBody);
-        process.exit(response.ok ? 0 : 1);
+        if (response.ok) {
+            process.exit(0);
+        }
+        else {
+            const responseBody = await response.json();
+            console.log('Response:', responseBody);
+            process.exit(1);
+        }
     }
     catch (error) {
         console.log('Error:', error);
