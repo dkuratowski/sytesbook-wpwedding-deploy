@@ -1,5 +1,3 @@
-const axios = require('axios');
-
 if (!('OPERATOR_USERNAME' in process.env)) {
     console.log("Missing environment variable: OPERATOR_USERNAME");
     process.exit(1);
@@ -45,22 +43,37 @@ const requestBody = {
         }
     }
 };
-const config = {
-    auth: { username: username, password: password },
-    headers: { 'X-HTTP-Method-Override': 'PUT' }
-};
 
-axios.post(
-    `https://${mainDomainName}/wp-json/wpwedding/v1/${modelCollection}/${modelUid}/admin/domain`,
-    requestBody,
-    config
-).then(response => {
-    console.log('Response');
-    console.log(response);
-    process.exit(0);
-}).catch(err => {
-    console.log('Error');
-    console.log(err);
-    process.exit(1);
-});
+async function sendRequest() {
 
+    const requestBodyStr = JSON.stringify(requestBody);
+    console.log('Sending request to /admin/domain:', requestBodyStr);
+
+    try {
+        const response = await fetch(`https://${mainDomainName}/wp-json/wpwedding/v1/${modelCollection}/${modelUid}/admin/domain`, {
+            method: 'POST',
+            body: requestBodyStr,
+            headers: {
+                'Authorization': `Basic ${Buffer.from(`${username}:${password}`, "utf-8").toString("base64")}`,
+                'Content-Type': 'application/json',
+                'X-HTTP-Method-Override': 'PUT',
+            },
+        });
+
+        console.log(`Response status: ${response.status} ${response.statusText}`);
+        if (response.ok) {
+            process.exit(0);
+        }
+        else {
+            const responseBody = await response.json();
+            console.log('Response:', responseBody);
+            process.exit(1);
+        }
+    }
+    catch (error) {
+        console.log('Error:', error);
+        process.exit(1);
+    }
+}
+
+sendRequest();

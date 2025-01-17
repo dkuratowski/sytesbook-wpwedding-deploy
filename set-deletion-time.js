@@ -1,5 +1,3 @@
-const axios = require('axios');
-
 if (!('OPERATOR_USERNAME' in process.env)) {
     console.log("Missing environment variable: OPERATOR_USERNAME");
     process.exit(1);
@@ -48,23 +46,35 @@ else if (deletionTime !== 'now') {
     };
 }
 
-console.log('Sending request to /admin/soft-delete:', requestBody);
+async function sendRequest() {
 
-const config = {
-    auth: { username: username, password: password },
-};
+    const requestBodyStr = JSON.stringify(requestBody);
+    console.log('Sending request to /admin/soft-delete:', requestBodyStr);
 
-axios.post(
-    `https://${mainDomainName}/wp-json/wpwedding/v1/${modelCollection}/${modelUid}/admin/soft-delete`,
-    requestBody,
-    config
-).then(response => {
-    console.log('Response');
-    console.log(response);
-    process.exit(0);
-}).catch(err => {
-    console.log('Error');
-    console.log(err);
-    process.exit(1);
-});
+    try {
+        const response = await fetch(`https://${mainDomainName}/wp-json/wpwedding/v1/${modelCollection}/${modelUid}/admin/soft-delete`, {
+            method: 'POST',
+            body: requestBodyStr,
+            headers: {
+                'Authorization': `Basic ${Buffer.from(`${username}:${password}`, "utf-8").toString("base64")}`,
+                'Content-Type': 'application/json',
+            },
+        });
 
+        console.log(`Response status: ${response.status} ${response.statusText}`);
+        if (response.ok) {
+            process.exit(0);
+        }
+        else {
+            const responseBody = await response.json();
+            console.log('Response:', responseBody);
+            process.exit(1);
+        }
+    }
+    catch (error) {
+        console.log('Error:', error);
+        process.exit(1);
+    }
+}
+
+sendRequest();
