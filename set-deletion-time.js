@@ -56,7 +56,8 @@ async function sendRequest() {
             method: 'POST',
             body: requestBodyStr,
             headers: {
-                'Authorization': `Basic ${Buffer.from(`${username}:${password}`, "utf-8").toString("base64")}`
+                'Authorization': `Basic ${Buffer.from(`${username}:${password}`, "utf-8").toString("base64")}`,
+                'Content-Type': 'application/json',
             },
         });
         const responseBody = await response.json();
@@ -72,4 +73,3 @@ async function sendRequest() {
 }
 
 sendRequest();
-console.log('Unexpected exit');
