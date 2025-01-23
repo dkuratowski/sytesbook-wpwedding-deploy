@@ -108,7 +108,8 @@ jobs:
       with:
         target-server: ${{ vars.SFTP_SERVER }}
         remote-user: ${{ secrets.SFTP_USER }}
-        private-ssh-key: ${{ secrets.SFTP_SSH_KEY }}
+        private-ssh-key: |
+          ${{ secrets.SFTP_SSH_KEY }}
         ssh-port: 22
         source-path: ./package/
         destination-path: "${{ vars.WWWROOT_FOLDER }}/${{ vars.DEPLOYMENT_FOLDER }}/"
@@ -122,7 +123,8 @@ jobs:
       with:
         target-server: ${{ vars.SFTP_SERVER }}
         remote-user: ${{ secrets.SFTP_USER }}
-        private-ssh-key: ${{ secrets.SFTP_SSH_KEY }}
+        private-ssh-key: |
+          ${{ secrets.SFTP_SSH_KEY }}
         ssh-port: 22
         source-path: ./package/
         destination-path: "${{ vars.WWWROOT_FOLDER }}/${{ vars.MAIN_DOMAIN_FOLDER }}/installer/"
