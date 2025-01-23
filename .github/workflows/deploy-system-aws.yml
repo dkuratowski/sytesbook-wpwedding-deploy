@@ -104,25 +104,28 @@ jobs:
         ./repos/sytesbook-wpwedding-deploy/create-package.sh ${{ steps.generate_package_id.outputs.generated_id }}
 
     - name: Deploy package to the webserver
-      run: |
-        echo "TODO: deploy package to the webserver"
-        ls ./package
-      # uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-      # with:
-      #   server: ${{ vars.FTP_SERVER }}
-      #   username: ${{ secrets.FTP_USER }}
-      #   password: ${{ secrets.FTP_PASSWORD }}
-      #   local-dir: ./package/
-      #   server-dir: "${{ vars.DEPLOYMENT_FOLDER }}/"
+      uses: SamKirkland/web-deploy@v1
+      with:
+        target-server: ${{ vars.SFTP_SERVER }}
+        remote-user: ${{ secrets.SFTP_USER }}
+        private-ssh-key: ${{ secrets.SFTP_SSH_KEY }}
+        ssh-port: 22
+        source-path: ./package/
+        destination-path: "${{ vars.WWWROOT_FOLDER }}/${{ vars.DEPLOYMENT_FOLDER }}/"
 
     - name: Prepare on-site installer
       run: |
         ./repos/sytesbook-wpwedding-deploy/prepare-installer.sh ${{ steps.generate_package_id.outputs.generated_id }}
 
     - name: Deploy on-site installer to the webserver
-      run: |
-        echo "TODO: deploy on-site installer to the webserver"
-        ls ./installer
+      uses: SamKirkland/web-deploy@v1
+      with:
+        target-server: ${{ vars.SFTP_SERVER }}
+        remote-user: ${{ secrets.SFTP_USER }}
+        private-ssh-key: ${{ secrets.SFTP_SSH_KEY }}
+        ssh-port: 22
+        source-path: ./package/
+        destination-path: "${{ vars.WWWROOT_FOLDER }}/${{ vars.MAIN_DOMAIN_FOLDER }}/installer/"
       # uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       # with:
       #   server: ${{ vars.FTP_SERVER }}
