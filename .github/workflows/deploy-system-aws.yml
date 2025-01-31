@@ -120,7 +120,7 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
         source: "./package.tar.gz"
-        target: ${{ vars.ENV_ROOT_DIR }}
+        target: "${{ vars.ENV_ROOT_DIR }}/deployment"
 
     # - name: Install package
     #   uses: appleboy/ssh-action@v0.1.10
