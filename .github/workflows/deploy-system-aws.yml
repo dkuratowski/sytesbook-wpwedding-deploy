@@ -113,6 +113,25 @@ jobs:
       run: |
         ./repos/sytesbook-wpwedding-deploy/create-package.sh ${{ steps.generate_package_id.outputs.generated_id }}
 
+    - name: Cleanup old installation
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ vars.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        command_timeout: 30m
+        script: |
+          echo "Installing package"
+          echo "Umask:"
+          umask
+          cd ${{ vars.ENV_ROOT_DIR }}/deployment
+          rm -rf ./deployment/*
+          rm -f ./deployment/.env
+          rm -f ./main-domain-public/*
+          rm -f ./main-domain-public/.htaccess
+          rm -f ./model-domains-public/*
+          rm -f ./model-domains-public/.htaccess
+
     - name: Deploy package to the web server
       uses: appleboy/scp-action@v0.1.7
       with:
@@ -122,15 +141,20 @@ jobs:
         source: "./package.tar.gz"
         target: "${{ vars.ENV_ROOT_DIR }}/deployment"
 
-    # - name: Install package
-    #   uses: appleboy/ssh-action@v0.1.10
-    #   with:
-    #     host: ${{ vars.SSH_HOST }}
-    #     username: ${{ secrets.SSH_USER }}
-    #     key: ${{ secrets.SSH_KEY }}
-    #     command_timeout: 30m
-    #     script: | 
-    #       echo "Hello sytesbook-nostromo"
+    - name: Install package
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ vars.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        command_timeout: 30m
+        script: |
+          echo "Installing package"
+          echo "Umask:"
+          umask
+          cd ${{ vars.ENV_ROOT_DIR }}/deployment
+          tar -xzvf package.tar.gz
+          rm package.tar.gz
 
     # - name: Deploy package to the webserver
     #   uses: SamKirkland/web-deploy@v1
