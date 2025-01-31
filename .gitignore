@@ -3,3 +3,7 @@ node_modules/
 
 # ignore Composer dependency directories
 vendor/
+
+# ignore drawio tmp and backup files
+*.bkp
+*.dtmp
