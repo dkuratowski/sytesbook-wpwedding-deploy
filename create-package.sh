@@ -1,6 +1,6 @@
 #!/bin/bash
 
-package_id=$1
+# package_id=$1
 
 echo "* Removing unnecessary files and symbolic links created by composer"
 rm -r ./repos/sytesbook-wpwedding/wp/uploads
@@ -35,9 +35,9 @@ node ./repos/sytesbook-wpwedding-deploy/decrypt-env.js ./repos/sytesbook-wpweddi
 echo "  Done"
 
 
-echo "* Creating ZIP file for deployment"
-mkdir ./package
+echo "* Creating tar.gz archive for deployment"
 cd ./repos/sytesbook-wpwedding
-zip -r "../../package/package_$package_id.zip" src vendor wp .env version.json
+tar -czvf ../../package.tar.gz src vendor wp .env version.json
+# zip -r "../../package/package_$package_id.zip" src vendor wp .env version.json
 cd ../..
 echo "  Package created"

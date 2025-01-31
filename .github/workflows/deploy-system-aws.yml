@@ -22,96 +22,115 @@ jobs:
     runs-on: ubuntu-latest
     environment: 
       name: ${{ inputs.environment }}
-    steps:
-    - name: print out example job
-      uses: appleboy/ssh-action@v0.1.10
-      with:
-        host: ${{ vars.SSH_HOST }}
-        username: ${{ secrets.SSH_USER }}
-        key: ${{ secrets.SSH_KEY }}
-        command_timeout: 30m
-        script: | 
-          echo "Hello sytesbook-nostromo"
     # steps:
-    # - name: Setup PHP
-    #   uses: shivammathur/setup-php@v2
+    # - name: print out example job
+    #   uses: appleboy/ssh-action@v0.1.10
     #   with:
-    #     php-version: "8.3"
+    #     host: ${{ vars.SSH_HOST }}
+    #     username: ${{ secrets.SSH_USER }}
+    #     key: ${{ secrets.SSH_KEY }}
+    #     command_timeout: 30m
+    #     script: | 
+    #       echo "Hello sytesbook-nostromo"
+    steps:
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: "8.3"
 
-    # - name: Setup NodeJS
-    #   uses: actions/setup-node@v4
-    #   with:
-    #     node-version: 18
+    - name: Setup NodeJS
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
 
-    # - name: Check versions
-    #   run: |
-    #     echo "PHP version: $(php --version)"
-    #     echo "NodeJS version: $(node --version)"
-    #     echo "NPM version: $(npm --version)"
+    - name: Check versions
+      run: |
+        echo "PHP version: $(php --version)"
+        echo "NodeJS version: $(node --version)"
+        echo "NPM version: $(npm --version)"
 
-    # - name: "Checkout: sytesbook-wpwedding-deploy"
-    #   uses: actions/checkout@v4
-    #   with:
-    #     repository: dkuratowski/sytesbook-wpwedding-deploy
-    #     path: repos/sytesbook-wpwedding-deploy
-    #     token: ${{ secrets.GIT_ACCESS_TOKEN }}
+    - name: "Checkout: sytesbook-wpwedding-deploy"
+      uses: actions/checkout@v4
+      with:
+        repository: dkuratowski/sytesbook-wpwedding-deploy
+        path: repos/sytesbook-wpwedding-deploy
+        token: ${{ secrets.GIT_ACCESS_TOKEN }}
 
-    # - name: "Checkout: sytesbook-wpwedding"
-    #   uses: actions/checkout@v4
-    #   with:
-    #     repository: dkuratowski/sytesbook-wpwedding
-    #     ref: ${{ inputs.tag }}
-    #     path: repos/sytesbook-wpwedding
-    #     token: ${{ secrets.GIT_ACCESS_TOKEN }}
+    - name: "Checkout: sytesbook-wpwedding"
+      uses: actions/checkout@v4
+      with:
+        repository: dkuratowski/sytesbook-wpwedding
+        ref: ${{ inputs.tag }}
+        path: repos/sytesbook-wpwedding
+        token: ${{ secrets.GIT_ACCESS_TOKEN }}
 
-    # - name: "Checkout: sytesbook-wpwedding-installer"
-    #   uses: actions/checkout@v4
-    #   with:
-    #     repository: dkuratowski/sytesbook-wpwedding-installer
-    #     path: repos/sytesbook-wpwedding-installer
-    #     token: ${{ secrets.GIT_ACCESS_TOKEN }}
+    - name: "Checkout: sytesbook-wpwedding-installer"
+      uses: actions/checkout@v4
+      with:
+        repository: dkuratowski/sytesbook-wpwedding-installer
+        path: repos/sytesbook-wpwedding-installer
+        token: ${{ secrets.GIT_ACCESS_TOKEN }}
 
-    # - name: "Checkout: sytes-react"
-    #   uses: actions/checkout@v4
-    #   with:
-    #     repository: dkuratowski/sytes-react
-    #     path: repos/sytes-react
-    #     token: ${{ secrets.GIT_ACCESS_TOKEN }}
+    - name: "Checkout: sytes-react"
+      uses: actions/checkout@v4
+      with:
+        repository: dkuratowski/sytes-react
+        path: repos/sytes-react
+        token: ${{ secrets.GIT_ACCESS_TOKEN }}
 
-    # - name: "Composer install: sytesbook-wpwedding"
-    #   working-directory: ./repos/sytesbook-wpwedding
-    #   run: composer install
+    - name: "Composer install: sytesbook-wpwedding"
+      working-directory: ./repos/sytesbook-wpwedding
+      run: composer install
 
-    # - name: "NPM install: sytes-react"
-    #   working-directory: ./repos/sytes-react
-    #   run: npm install
+    - name: "NPM install: sytes-react"
+      working-directory: ./repos/sytes-react
+      run: npm install
 
-    # - name: "NPM install and build: sytesbook-wpwedding/src/wp-content/themes/sytesbook-wpwedding"
-    #   working-directory: ./repos/sytesbook-wpwedding/src/wp-content/themes/sytesbook-wpwedding
-    #   run: |
-    #     npm install
-    #     npm run build
+    - name: "NPM install and build: sytesbook-wpwedding/src/wp-content/themes/sytesbook-wpwedding"
+      working-directory: ./repos/sytesbook-wpwedding/src/wp-content/themes/sytesbook-wpwedding
+      run: |
+        npm install
+        npm run build
     
     # - name: "Composer install: sytesbook-wpwedding-deploy/installer"
     #   working-directory: ./repos/sytesbook-wpwedding-deploy/installer
     #   run: composer install
 
-    # - name: "NPM install: sytesbook-wpwedding-deploy"
-    #   working-directory: ./repos/sytesbook-wpwedding-deploy
-    #   run: |
-    #     npm install
+    - name: "NPM install: sytesbook-wpwedding-deploy"
+      working-directory: ./repos/sytesbook-wpwedding-deploy
+      run: |
+        npm install
     
     # - name: "Generate package ID"
     #   id: generate_package_id
     #   run: |
     #     ./repos/sytesbook-wpwedding-deploy/generate-id.sh
     
-    # - name: "Create package"
-    #   id: create_package
-    #   env:
-    #     DOTENV_KEY: ${{ secrets.DOTENV_VAULT_KEY }}
-    #   run: |
-    #     ./repos/sytesbook-wpwedding-deploy/create-package.sh ${{ steps.generate_package_id.outputs.generated_id }}
+    - name: "Create package"
+      id: create_package
+      env:
+        DOTENV_KEY: ${{ secrets.DOTENV_VAULT_KEY }}
+      run: |
+        ./repos/sytesbook-wpwedding-deploy/create-package.sh ${{ steps.generate_package_id.outputs.generated_id }}
+
+    - name: Deploy package to the web server
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ vars.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        source: "./package.tar.gz"
+        target: ${{ vars.ENV_ROOT_DIR }}
+
+    # - name: Install package
+    #   uses: appleboy/ssh-action@v0.1.10
+    #   with:
+    #     host: ${{ vars.SSH_HOST }}
+    #     username: ${{ secrets.SSH_USER }}
+    #     key: ${{ secrets.SSH_KEY }}
+    #     command_timeout: 30m
+    #     script: | 
+    #       echo "Hello sytesbook-nostromo"
 
     # - name: Deploy package to the webserver
     #   uses: SamKirkland/web-deploy@v1
