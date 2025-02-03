@@ -128,4 +128,18 @@ Restart Apache: `systemctl reload apache2`
 * Run `certbot` as root: `certbot --apache`
 * Follow instructions in the terminal
 
+### Create WordPress databases
+* Connect to DB as root: `mysql`
+* Create new database for environment `{env}`: `CREATE DATABASE db_wedding_{env}_sytesbook;`
+* Create user for the new database: `CREATE USER usr_wedding_{env}_sytesbook@localhost IDENTIFIED BY '{password}';`
+* Give the user permission over the new database: `GRANT ALL ON db_wedding_{env}_sytesbook.* TO usr_wedding_{env}_sytesbook@localhost;`
+* Exit from MySQL: `exit`
+
+Test if new user has proper permissions:
+* Login to MySQL console by the new user: `mysql -u usr_wedding_{env}_sytesbook -p`
+* Enter the `{password}` that was given to the new user.
+* Query: `SHOW DATABASES;`
+* You should see `db_wedding_{env}_sytesbook`, `information_schema` and `performance_schema` listed.
+* Exit from MySQL: `exit`
+
 
