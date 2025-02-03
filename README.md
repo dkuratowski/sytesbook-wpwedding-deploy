@@ -10,24 +10,24 @@
 * Attach static IP address to the created server
 * Open the following ports on the server: 22 (SSH), 80 (HTTP), 443 (HTTPS)
 * Connect to the server via SSH from the browser console
-* Run `sudo apt update`
-* Run `sudo apt full-upgrade`
+* Run `apt update`
+* Run `apt full-upgrade`
 * Reboot the server
 
 ### Install Apache Web Server
-* Run `sudo apt install apache2`
+* Run `apt install apache2`
 * Try to browse `http://{your-ip-address}`. It should show the Apache2 default page
 * Install and enable `libapache2-mpm-itk` module to allow different users per VirtualHosts:
   * `apt install libapache2-mpm-itk`
   * `a2enmod libapache2-mpm-itk`
 
 ### Install MySQL Server
-* Run `sudo apt install mysql-server`
-* Run `sudo mysql_secure_installation`. This script will remove some insecure default settings and lock down access to your database system.
-* Try login to MySQL with `sudo mysql`. You should see the MySQL prompt
+* Run `apt install mysql-server`
+* Run `mysql_secure_installation`. This script will remove some insecure default settings and lock down access to your database system.
+* Try login to MySQL with `mysql`. You should see the MySQL prompt
 
 ### Install PHP
-* Run `sudo apt install php libapache2-mod-php php-mysql`
+* Run `apt install php libapache2-mod-php php-mysql php-curl`
 * Check PHP version with `php -v`
 
 ### Create Directory Structure
@@ -74,8 +74,8 @@ Set file permissions and ownerships of the directories inside each environment r
 ### Configure SSH
 Temporarily enable password authentication on the server:
 * Add the following line to `/etc/ssh/sshd_config.d/60-cloudimg-settings.conf` and `/etc/ssh/sshd_config`: `PasswordAuthentication yes` and `PubKeyAuthentication no`
-* Restart SSH with `sudo systemctl restart ssh`
-* Setup password for users `deploy-{env}`: `sudo passwd deploy-{env}`
+* Restart SSH with `systemctl restart ssh`
+* Setup password for users `deploy-{env}`: `passwd deploy-{env}`
 
 Generate SSH key for user `deploy-{env}` on the local machine:
 * `ssh-keygen -t rsa -b 2048 -C 'SSH keys for deploy-{env} on {server-name}'`
@@ -86,7 +86,7 @@ Upload the generated SSH key for user `deploy-{env}` to the server:
 
 Disable password authentication:
 * Add the following line to `/etc/ssh/sshd_config.d/60-cloudimg-settings.conf` and `/etc/ssh/sshd_config`: `PasswordAuthentication no` and `PubKeyAuthentication yes`
-* Restart SSH with `sudo systemctl restart ssh`
+* Restart SSH with `systemctl restart ssh`
 
 ### Setup UMASK for `deploy-{env}` and `apache-{env}` users
 * Calculate the necessary `umask` value:
@@ -104,7 +104,7 @@ Disable password authentication:
 
 
 ### Configure Apache Web Server
-Create a new VirtualHost config file at `/etc/apache2/sites-available/{domain-name}.conf` with the following contents:
+Create a new VirtualHost for each environment `{env}` at `/etc/apache2/sites-available/{domain-name}.conf` (where `{domain-name}` is the domain name corresponding to environment `{env}`) with the following contents:
 ```
 <VirtualHost *:80>
     ServerName {domain-name}
@@ -122,3 +122,10 @@ Create a new VirtualHost config file at `/etc/apache2/sites-available/{domain-na
 Enable the new VirtualHost: `a2ensite {domain-name}`
 
 Restart Apache: `systemctl reload apache2`
+
+### Configure SSL with Let's Encrypt
+* Install `certbot`: `apt install certbot python3-certbot-apache`
+* Run `certbot` as root: `certbot --apache`
+* Follow instructions in the terminal
+
+
