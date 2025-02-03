@@ -121,9 +121,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         command_timeout: 30m
         script: |
-          echo "Installing package"
-          echo "Umask:"
-          umask
+          echo "Cleanup old installation"
           cd ${{ vars.ENV_ROOT_DIR }}/deployment
           rm -rf ./deployment/*
           rm -f ./deployment/.env
@@ -150,11 +148,33 @@ jobs:
         command_timeout: 30m
         script: |
           echo "Installing package"
-          echo "Umask:"
-          umask
+          echo "Umask: $(umask)"
           cd ${{ vars.ENV_ROOT_DIR }}/deployment
           tar -xzvf package.tar.gz
           rm package.tar.gz
+          echo "Creating symbolic links"
+          cd ${{ vars.ENV_ROOT_DIR }}/main-domain-public
+          ln -s ${{ vars.ENV_ROOT_DIR }}/uploads uploads
+          ln -s ${{ vars.ENV_ROOT_DIR }}/deployment/wp/wp-admin wp-admin
+          ln -s ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-content wp-content
+          ln -s ${{ vars.ENV_ROOT_DIR }}/deployment/wp/wp-includes wp-includes
+          ln -s ${{ vars.ENV_ROOT_DIR }}/deployment/wp/.htaccess .htaccess
+          ln -s ${{ vars.ENV_ROOT_DIR }}/deployment/wp/index.php index.php
+          ln -s ${{ vars.ENV_ROOT_DIR }}/deployment/wp/wp-login.php wp-login.php
+          cd ${{ vars.ENV_ROOT_DIR }}/model-domains-public
+          ln -s ${{ vars.ENV_ROOT_DIR }}/uploads uploads
+          ln -s ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-content wp-content
+          ln -s ${{ vars.ENV_ROOT_DIR }}/deployment/wp/wp-includes wp-includes
+          ln -s ${{ vars.ENV_ROOT_DIR }}/deployment/wp/.htaccess .htaccess
+          ln -s ${{ vars.ENV_ROOT_DIR }}/deployment/wp/index.php index.php
+          cd ${{ vars.ENV_ROOT_DIR }}/deployment
+          ln -s ${{ vars.ENV_ROOT_DIR }}/logs logs
+          cd ${{ vars.ENV_ROOT_DIR }}/deployment/wp
+          ln -s ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-content wp-content
+          ln -s ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-config.php wp-config.php
+          ln -s ${{ vars.ENV_ROOT_DIR }}/uploads uploads
+
+
 
     # - name: Deploy package to the webserver
     #   uses: SamKirkland/web-deploy@v1

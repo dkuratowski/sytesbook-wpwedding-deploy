@@ -36,13 +36,6 @@ Create the following service users for each environment {env}:
 * `apache-{env}`: The corresponding Apache virtual host will be running as this user.
 * `deploy-{env}`: The GitHub Actions workflow deploying to `{env}` will be running as this user.
 
-Setup `umask` values for both created users:
-* default file permissions: `666 = 110110110`
-* default directory permissions: `777 = 111111111`
-* umasked file permissions: `640 = 110100000`
-* umasked directory permissions: `740 = 111100000`
-* umask value: `037 = 000011111`
-
 Create the following group for each environment as the primary group of the users created above for that environment:
 * `sytesbook-{env}`: The group owner of all directories inside the environment root.
 
@@ -91,6 +84,20 @@ Upload the generated SSH key for user `deploy-{env}` to the server:
 Disable password authentication:
 * Add the following line to `/etc/ssh/sshd_config.d/60-cloudimg-settings.conf` and `/etc/ssh/sshd_config`: `PasswordAuthentication no` and `PubKeyAuthentication yes`
 * Restart SSH with `sudo systemctl restart ssh`
+
+### Setup UMASK for `deploy-{env}` and `apache-{env}` users
+* Calculate the necessary `umask` value:
+  * default file permissions: `666 = 110110110`
+  * default directory permissions: `777 = 111111111`
+  * umasked file permissions: `640 = 110100000`
+  * umasked directory permissions: `740 = 111100000`
+  * umask value: `037 = 000011111`
+
+* Turn on `pam_umask` module by appending the following line to `/etc/pam.d/common-session` (if doesn't exist yet): `session optional pam_umask.so`
+
+* Add UMASK value to the GECOS field of the users in `/etc/passwd`:
+  * `deploy-{env}:x:1000:1000:,,,umask=0037:/home/deploy-{env}:/bin/bash
+  * `apache-{env}:x:1001:1001:,,,umask=0037:/nonexistent:/usr/sbin/nologin
 
 ## GitHub Actions Folder Structure
 `repos/sytesbook-wpwedding` - Run `composer install`
