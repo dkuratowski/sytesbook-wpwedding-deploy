@@ -554,7 +554,7 @@
     </mxGraphModel>
   </diagram>
   <diagram name="Server Directory Structure v2" id="slq-GmolcPxi06INoLlD">
-    <mxGraphModel dx="2315" dy="953" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="2152" dy="847" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -667,7 +667,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="1epN-AGbNZ8dsCqa4cco-63" value=".env" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fa6800;strokeColor=#C73500;fontColor=#000000;" parent="1" vertex="1">
-          <mxGeometry x="780" y="1060" width="80" height="25" as="geometry" />
+          <mxGeometry x="780" y="1050" width="80" height="25" as="geometry" />
         </mxCell>
         <mxCell id="1epN-AGbNZ8dsCqa4cco-64" value="" style="endArrow=classic;html=1;rounded=0;edgeStyle=elbowEdgeStyle;" parent="1" source="oDOgSIpIKI1p7b8SBWgH-16" target="1epN-AGbNZ8dsCqa4cco-63" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -760,7 +760,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="m4DeNMkGD3FWATtHilkw-31" value="version.json" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fa6800;strokeColor=#C73500;fontColor=#000000;" parent="1" vertex="1">
-          <mxGeometry x="780" y="1100" width="80" height="25" as="geometry" />
+          <mxGeometry x="780" y="1080" width="80" height="25" as="geometry" />
         </mxCell>
         <mxCell id="m4DeNMkGD3FWATtHilkw-32" value="" style="endArrow=classic;html=1;rounded=0;edgeStyle=elbowEdgeStyle;" parent="1" source="oDOgSIpIKI1p7b8SBWgH-16" target="m4DeNMkGD3FWATtHilkw-31" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -983,7 +983,7 @@
           <mxGeometry x="920" y="569" width="100" height="25" as="geometry" />
         </mxCell>
         <mxCell id="8rMjjpTovViYjlwAPltU-3" value="logs" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e3c800;fontColor=#000000;strokeColor=#B09500;" vertex="1" parent="1">
-          <mxGeometry x="780" y="1025" width="80" height="25" as="geometry" />
+          <mxGeometry x="780" y="1020" width="80" height="25" as="geometry" />
         </mxCell>
         <mxCell id="8rMjjpTovViYjlwAPltU-4" value="" style="endArrow=classic;html=1;rounded=0;edgeStyle=elbowEdgeStyle;" edge="1" parent="1" source="oDOgSIpIKI1p7b8SBWgH-16" target="8rMjjpTovViYjlwAPltU-3">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -997,7 +997,7 @@
             <mxPoint x="597" y="1213" as="targetPoint" />
             <Array as="points">
               <mxPoint x="940" y="1038" />
-              <mxPoint x="940" y="1130" />
+              <mxPoint x="940" y="1140" />
             </Array>
           </mxGeometry>
         </mxCell>

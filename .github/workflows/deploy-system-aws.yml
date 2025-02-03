@@ -133,6 +133,10 @@ jobs:
           cd ${{ vars.ENV_ROOT_DIR }}/deployment
           tar -xzf package.tar.gz
           rm package.tar.gz
+          echo "Creating flag directory"
+          cd ${{ vars.ENV_ROOT_DIR }}/deployment/wp
+          mkdir flags
+          chmod g+w flags
           echo "Creating symbolic links"
           cd ${{ vars.ENV_ROOT_DIR }}/main-domain-public
           ln -sv ${{ vars.ENV_ROOT_DIR }}/uploads

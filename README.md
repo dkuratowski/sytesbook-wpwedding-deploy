@@ -131,7 +131,8 @@ Restart Apache: `systemctl reload apache2`
 ### Create WordPress databases
 * Connect to DB as root: `mysql`
 * Create new database for environment `{env}`: `CREATE DATABASE db_wedding_{env}_sytesbook;`
-* Create user for the new database: `CREATE USER usr_wedding_{env}_sytesbook@localhost IDENTIFIED BY '{password}';`
+* Create user for the new database: `CREATE USER usr_wedding_{env}_sytesbook@localhost IDENTIFIED BY RANDOM PASSWORD;`
+* Save the generated password to the environment secrets.
 * Give the user permission over the new database: `GRANT ALL ON db_wedding_{env}_sytesbook.* TO usr_wedding_{env}_sytesbook@localhost;`
 * Exit from MySQL: `exit`
 
