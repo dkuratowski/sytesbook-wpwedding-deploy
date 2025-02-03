@@ -17,6 +17,9 @@
 ### Install Apache Web Server
 * Run `sudo apt install apache2`
 * Try to browse `http://{your-ip-address}`. It should show the Apache2 default page
+* Install and enable `libapache2-mpm-itk` module to allow different users per VirtualHosts:
+  * `apt install libapache2-mpm-itk`
+  * `a2enmod libapache2-mpm-itk`
 
 ### Install MySQL Server
 * Run `sudo apt install mysql-server`
@@ -45,27 +48,27 @@ Set file permissions and ownerships of the directories inside each environment r
 * `main-domain-public`:
   * owner: `deploy-{env}`
   * group owner: `sytesbook-{env}`
-  * permissions for directories: `rwxr-S--- (2740)`
+  * permissions for directories: `rwxr-s--- (2750)`
   * permissions for files: `rw-r----- (0640)`
 * `model-domains-public`:
   * owner: `deploy-{env}`
   * group owner: `sytesbook-{env}`
-  * permissions for directories: `rwxr-S--- (2740)`
+  * permissions for directories: `rwxr-s--- (2750)`
   * permissions for files: `rw-r----- (0640)`
 * `deployment`:
   * owner: `deploy-{env}`
   * group owner: `sytesbook-{env}`
-  * permissions for directories: `rwxr-S--- (2740)`
+  * permissions for directories: `rwxr-s--- (2750)`
   * permissions for files: `rw-r----- (0640)`
 * `uploads`:
   * owner: `apache-{env}`
   * group owner: `sytesbook-{env}`
-  * permissions for directories: `rwxr-S--- (2740)`
+  * permissions for directories: `rwxr-s--- (2750)`
   * permissions for files: `rw-r----- (0640)`
 * `logs`:
   * owner: `apache-{env}`
   * group owner: `sytesbook-{env}`
-  * permissions for directories: `rwxr-S--- (2740)`
+  * permissions for directories: `rwxr-s--- (2750)`
   * permissions for files: `rw-r----- (0640)`
 
 ### Configure SSH
@@ -87,33 +90,35 @@ Disable password authentication:
 
 ### Setup UMASK for `deploy-{env}` and `apache-{env}` users
 * Calculate the necessary `umask` value:
-  * default file permissions: `666 = 110110110`
-  * default directory permissions: `777 = 111111111`
-  * umasked file permissions: `640 = 110100000`
-  * umasked directory permissions: `740 = 111100000`
-  * umask value: `037 = 000011111`
+  * default file permissions: `666 = 110 110 110`
+  * default directory permissions: `777 = 111 111 111`
+  * umasked file permissions: `640 = 110 100 000`
+  * umasked directory permissions: `750 = 111 101 000`
+  * umask value: `027 = 000 010 111`
 
 * Turn on `pam_umask` module by appending the following line to `/etc/pam.d/common-session` (if doesn't exist yet): `session optional pam_umask.so`
 
 * Add UMASK value to the GECOS field of the users in `/etc/passwd`:
-  * `deploy-{env}:x:1000:1000:,,,umask=0037:/home/deploy-{env}:/bin/bash
-  * `apache-{env}:x:1001:1001:,,,umask=0037:/nonexistent:/usr/sbin/nologin
+  * `deploy-{env}:x:1000:1000:,,,umask=0027:/home/deploy-{env}:/bin/bash
+  * `apache-{env}:x:1001:1001:,,,umask=0027:/nonexistent:/usr/sbin/nologin
 
-## GitHub Actions Folder Structure
-`repos/sytesbook-wpwedding` - Run `composer install`
 
-`repos/sytesbook-wpwedding/wp` - Zip to `deploy/wp.zip`
+### Configure Apache Web Server
+Create a new VirtualHost config file at `/etc/apache2/sites-available/{domain-name}.conf` with the following contents:
+```
+<VirtualHost *:80>
+    ServerName {domain-name}
+    ServerAlias www.{domain-name}
+    ServerAdmin contact@example.com
+    DocumentRoot /var/www/{domain-name}/main-domain-public
+    <IfModule mpm_itk_module>
+        AssignUserId apache-{env} sytesbook-{env}
+    </IfModule>
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+```
 
-`repos/sytesbook-wpwedding/src` - Zip to `deploy/wp_src.zip`
+Enable the new VirtualHost: `a2ensite {domain-name}`
 
-`repos/sytesbook-wpwedding/vendor` - Zip to `deploy/wp_src.zip`
-
-`repos/sytesbook-wpwedding/wp/wp-content/themes/sytesbook-wpwedding` - Run `npm install` and `npm run build`
-
-`repos/sytesbook-wpwedding-installer` - Required for `composer install`
-
-`repos/sytes-react` - Required for `npm install` and `npm run build`
-
-`deploy/wp.zip` - Upload and unzip to the public folder on the webserver
-
-`deploy/wp_src.zip` - Upload and unzip to the private folder on the webserver
+Restart Apache: `systemctl reload apache2`
