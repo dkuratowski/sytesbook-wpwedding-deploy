@@ -143,4 +143,9 @@ Test if new user has proper permissions:
 * You should see `db_wedding_{env}_sytesbook`, `information_schema` and `performance_schema` listed.
 * Exit from MySQL: `exit`
 
-
+### Install WordPress
+* Open a browser and move to the domain name of the environment
+* Follow the on-screen installation instructions
+* Login to WordPress
+* Activate the `Sytesbook WP-Wedding Theme` in the `Appearance/Themes` menu from the Admin Dashboard
+* Open `Settings/Permalinks` page and press `Save Changes` button at the bottom of the screen
