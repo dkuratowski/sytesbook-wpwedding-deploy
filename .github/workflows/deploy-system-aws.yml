@@ -22,16 +22,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: 
       name: ${{ inputs.environment }}
-    # steps:
-    # - name: print out example job
-    #   uses: appleboy/ssh-action@v0.1.10
-    #   with:
-    #     host: ${{ vars.SSH_HOST }}
-    #     username: ${{ secrets.SSH_USER }}
-    #     key: ${{ secrets.SSH_KEY }}
-    #     command_timeout: 30m
-    #     script: | 
-    #       echo "Hello sytesbook-nostromo"
     steps:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
@@ -91,27 +81,18 @@ jobs:
       run: |
         npm install
         npm run build
-    
-    # - name: "Composer install: sytesbook-wpwedding-deploy/installer"
-    #   working-directory: ./repos/sytesbook-wpwedding-deploy/installer
-    #   run: composer install
 
     - name: "NPM install: sytesbook-wpwedding-deploy"
       working-directory: ./repos/sytesbook-wpwedding-deploy
       run: |
         npm install
     
-    # - name: "Generate package ID"
-    #   id: generate_package_id
-    #   run: |
-    #     ./repos/sytesbook-wpwedding-deploy/generate-id.sh
-    
     - name: "Create package"
       id: create_package
       env:
         DOTENV_KEY: ${{ secrets.DOTENV_VAULT_KEY }}
       run: |
-        ./repos/sytesbook-wpwedding-deploy/create-package.sh ${{ steps.generate_package_id.outputs.generated_id }}
+        ./repos/sytesbook-wpwedding-deploy/create-package.sh
 
     - name: Cleanup old installation
       uses: appleboy/ssh-action@v0.1.10
@@ -150,67 +131,26 @@ jobs:
           echo "Installing package"
           echo "Umask: $(umask)"
           cd ${{ vars.ENV_ROOT_DIR }}/deployment
-          tar -xzvf package.tar.gz
+          tar -xzf package.tar.gz
           rm package.tar.gz
           echo "Creating symbolic links"
           cd ${{ vars.ENV_ROOT_DIR }}/main-domain-public
-          ln -s ${{ vars.ENV_ROOT_DIR }}/uploads uploads
-          ln -s ${{ vars.ENV_ROOT_DIR }}/deployment/wp/wp-admin wp-admin
-          ln -s ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-content wp-content
-          ln -s ${{ vars.ENV_ROOT_DIR }}/deployment/wp/wp-includes wp-includes
-          ln -s ${{ vars.ENV_ROOT_DIR }}/deployment/wp/.htaccess .htaccess
-          ln -s ${{ vars.ENV_ROOT_DIR }}/deployment/wp/index.php index.php
-          ln -s ${{ vars.ENV_ROOT_DIR }}/deployment/wp/wp-login.php wp-login.php
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/uploads uploads
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/wp-admin wp-admin
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-content wp-content
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/wp-includes wp-includes
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/.htaccess .htaccess
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/index.php index.php
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/wp-login.php wp-login.php
           cd ${{ vars.ENV_ROOT_DIR }}/model-domains-public
-          ln -s ${{ vars.ENV_ROOT_DIR }}/uploads uploads
-          ln -s ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-content wp-content
-          ln -s ${{ vars.ENV_ROOT_DIR }}/deployment/wp/wp-includes wp-includes
-          ln -s ${{ vars.ENV_ROOT_DIR }}/deployment/wp/.htaccess .htaccess
-          ln -s ${{ vars.ENV_ROOT_DIR }}/deployment/wp/index.php index.php
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/uploads uploads
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-content wp-content
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/wp-includes wp-includes
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/.htaccess .htaccess
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/index.php index.php
           cd ${{ vars.ENV_ROOT_DIR }}/deployment
-          ln -s ${{ vars.ENV_ROOT_DIR }}/logs logs
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/logs logs
           cd ${{ vars.ENV_ROOT_DIR }}/deployment/wp
-          ln -s ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-content wp-content
-          ln -s ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-config.php wp-config.php
-          ln -s ${{ vars.ENV_ROOT_DIR }}/uploads uploads
-
-
-
-    # - name: Deploy package to the webserver
-    #   uses: SamKirkland/web-deploy@v1
-    #   with:
-    #     target-server: ${{ vars.SFTP_SERVER }}
-    #     remote-user: ${{ secrets.SFTP_USER }}
-    #     private-ssh-key: |
-    #       ${{ secrets.SFTP_SSH_KEY }}
-    #     ssh-port: 22
-    #     source-path: ./package/
-    #     destination-path: "${{ vars.WWWROOT_FOLDER }}/${{ vars.DEPLOYMENT_FOLDER }}/"
-
-    # - name: Prepare on-site installer
-    #   run: |
-    #     ./repos/sytesbook-wpwedding-deploy/prepare-installer.sh ${{ steps.generate_package_id.outputs.generated_id }}
-
-    # - name: Deploy on-site installer to the webserver
-    #   uses: SamKirkland/web-deploy@v1
-    #   with:
-    #     target-server: ${{ vars.SFTP_SERVER }}
-    #     remote-user: ${{ secrets.SFTP_USER }}
-    #     private-ssh-key: |
-    #       ${{ secrets.SFTP_SSH_KEY }}
-    #     ssh-port: 22
-    #     source-path: ./package/
-    #     destination-path: "${{ vars.WWWROOT_FOLDER }}/${{ vars.MAIN_DOMAIN_FOLDER }}/installer/"
-      # uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-      # with:
-      #   server: ${{ vars.FTP_SERVER }}
-      #   username: ${{ secrets.FTP_USER }}
-      #   password: ${{ secrets.FTP_PASSWORD }}
-      #   local-dir: ./installer/
-      #   server-dir: "${{ vars.MAIN_DOMAIN_FOLDER }}/installer/"
-
-    # - name: Execute on-site installer
-    #   run: |
-    #     echo "TODO: Execute on-site installer"
-      # run: |
-      #   ./repos/sytesbook-wpwedding-deploy/execute-installer.sh deploy-system ${{ vars.MAIN_DOMAIN_NAME }} ${{ steps.generate_package_id.outputs.generated_id }} ${{ vars.DEPLOYMENT_FOLDER }} ${{ vars.MAIN_DOMAIN_FOLDER }}
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-content wp-content
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-config.php wp-config.php
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/uploads uploads
