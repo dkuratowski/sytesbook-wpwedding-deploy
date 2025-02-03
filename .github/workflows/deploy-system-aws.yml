@@ -104,12 +104,12 @@ jobs:
         script: |
           echo "Cleanup old installation"
           cd ${{ vars.ENV_ROOT_DIR }}/deployment
-          rm -rf ./deployment/*
-          rm -f ./deployment/.env
-          rm -f ./main-domain-public/*
-          rm -f ./main-domain-public/.htaccess
-          rm -f ./model-domains-public/*
-          rm -f ./model-domains-public/.htaccess
+          rm -rfv ./deployment/*
+          rm -fv ./deployment/.env
+          rm -fv ./main-domain-public/*
+          rm -fv ./main-domain-public/.htaccess
+          rm -fv ./model-domains-public/*
+          rm -fv ./model-domains-public/.htaccess
 
     - name: Deploy package to the web server
       uses: appleboy/scp-action@v0.1.7
@@ -120,37 +120,37 @@ jobs:
         source: "./package.tar.gz"
         target: "${{ vars.ENV_ROOT_DIR }}/deployment"
 
-    - name: Install package
-      uses: appleboy/ssh-action@v0.1.10
-      with:
-        host: ${{ vars.SSH_HOST }}
-        username: ${{ secrets.SSH_USER }}
-        key: ${{ secrets.SSH_KEY }}
-        command_timeout: 30m
-        script: |
-          echo "Installing package"
-          echo "Umask: $(umask)"
-          cd ${{ vars.ENV_ROOT_DIR }}/deployment
-          tar -xzf package.tar.gz
-          rm package.tar.gz
-          echo "Creating symbolic links"
-          cd ${{ vars.ENV_ROOT_DIR }}/main-domain-public
-          ln -sv ${{ vars.ENV_ROOT_DIR }}/uploads
-          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/wp-admin
-          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-content
-          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/wp-includes
-          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/.htaccess
-          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/index.php
-          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/wp-login.php
-          cd ${{ vars.ENV_ROOT_DIR }}/model-domains-public
-          ln -sv ${{ vars.ENV_ROOT_DIR }}/uploads
-          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-content
-          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/wp-includes
-          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/.htaccess
-          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/index.php
-          cd ${{ vars.ENV_ROOT_DIR }}/deployment
-          ln -sv ${{ vars.ENV_ROOT_DIR }}/logs
-          cd ${{ vars.ENV_ROOT_DIR }}/deployment/wp
-          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-content
-          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-config.php
-          ln -sv ${{ vars.ENV_ROOT_DIR }}/uploads
+    # - name: Install package
+    #   uses: appleboy/ssh-action@v0.1.10
+    #   with:
+    #     host: ${{ vars.SSH_HOST }}
+    #     username: ${{ secrets.SSH_USER }}
+    #     key: ${{ secrets.SSH_KEY }}
+    #     command_timeout: 30m
+    #     script: |
+    #       echo "Installing package"
+    #       echo "Umask: $(umask)"
+    #       cd ${{ vars.ENV_ROOT_DIR }}/deployment
+    #       tar -xzf package.tar.gz
+    #       rm package.tar.gz
+    #       echo "Creating symbolic links"
+    #       cd ${{ vars.ENV_ROOT_DIR }}/main-domain-public
+    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/uploads
+    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/wp-admin
+    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-content
+    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/wp-includes
+    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/.htaccess
+    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/index.php
+    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/wp-login.php
+    #       cd ${{ vars.ENV_ROOT_DIR }}/model-domains-public
+    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/uploads
+    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-content
+    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/wp-includes
+    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/.htaccess
+    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/index.php
+    #       cd ${{ vars.ENV_ROOT_DIR }}/deployment
+    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/logs
+    #       cd ${{ vars.ENV_ROOT_DIR }}/deployment/wp
+    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-content
+    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-config.php
+    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/uploads
