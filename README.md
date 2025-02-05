@@ -27,7 +27,7 @@
 * Try login to MySQL with `mysql`. You should see the MySQL prompt
 
 ### Install PHP
-* Run `apt install php libapache2-mod-php php-mysql php-curl`
+* Run `apt install php libapache2-mod-php php-mysql php-curl php-dom`
 * Check PHP version with `php -v`
 
 ### Create Directory Structure
@@ -120,6 +120,15 @@ Create a new VirtualHost for each environment `{env}` at `/etc/apache2/sites-ava
 ```
 
 Enable the new VirtualHost: `a2ensite {domain-name}`
+
+Create a new configuration at `/etc/apache2/sites-available/enable-rewrite.conf` with the following contents:
+```
+<Directory /var/www/>
+    AllowOverride All
+</Directory>
+```
+
+Enable the new configuration: `a2enconf enable-rewrite`
 
 Restart Apache: `systemctl reload apache2`
 
