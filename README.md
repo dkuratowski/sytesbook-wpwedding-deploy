@@ -158,3 +158,9 @@ Test if new user has proper permissions:
 * Login to WordPress
 * Activate the `Sytesbook WP-Wedding Theme` in the `Appearance/Themes` menu from the Admin Dashboard
 * Open `Settings/Permalinks` page and press `Save Changes` button at the bottom of the screen
+
+### Setup CRON job for creating backups
+Create or edit crontab of user `apache-{env}` for each environment `{env}`:
+* Login as root.
+* Run: `crontab -e -u apache-{env}`
+* Add the following job to the end of the cronfile: `/var/www/{domain-name}/deployment/vendor/wp-cli/wp-cli/bin/wp backup create --path=/var/www/{domain-name}/deployment/wp --debug

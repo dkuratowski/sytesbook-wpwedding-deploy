@@ -1,4 +1,4 @@
-<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/25.0.2 Chrome/128.0.6613.186 Electron/32.2.5 Safari/537.36" version="25.0.2" pages="4">
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/25.0.2 Chrome/128.0.6613.186 Electron/32.2.5 Safari/537.36" version="25.0.2" pages="5">
   <diagram name="Server Directory Structure v1" id="SGqMpZKhzNt8_crhXunx">
     <mxGraphModel dx="1172" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -1677,6 +1677,54 @@
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="190" y="969" as="sourcePoint" />
             <mxPoint x="513" y="962" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="5tgN9Rl3JjQ2MRAUT5wJ" name="Backup">
+    <mxGraphModel dx="1172" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="i59BTmyYeJfzj-daOWkN-1" value="tar -czvf backup db uploads" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="302.5" y="320" width="195" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="i59BTmyYeJfzj-daOWkN-2" value="wp db export" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="190" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="i59BTmyYeJfzj-daOWkN-4" value="db" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="i59BTmyYeJfzj-daOWkN-2" target="i59BTmyYeJfzj-daOWkN-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="390" y="300" as="sourcePoint" />
+            <mxPoint x="440" y="250" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="i59BTmyYeJfzj-daOWkN-5" value="wp backup create" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="450" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="i59BTmyYeJfzj-daOWkN-6" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="i59BTmyYeJfzj-daOWkN-1" target="i59BTmyYeJfzj-daOWkN-5">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="390" y="300" as="sourcePoint" />
+            <mxPoint x="440" y="250" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="i59BTmyYeJfzj-daOWkN-7" value="backup" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="i59BTmyYeJfzj-daOWkN-6">
+          <mxGeometry x="0.0286" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="i59BTmyYeJfzj-daOWkN-8" value="AWS S3" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="600" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="i59BTmyYeJfzj-daOWkN-9" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="i59BTmyYeJfzj-daOWkN-5" target="i59BTmyYeJfzj-daOWkN-8">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="399.5" y="530" as="sourcePoint" />
+            <mxPoint x="399.5" y="600" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="i59BTmyYeJfzj-daOWkN-10" value="s3://bucket_name/object_name" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="i59BTmyYeJfzj-daOWkN-9">
+          <mxGeometry x="0.0286" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
       </root>
