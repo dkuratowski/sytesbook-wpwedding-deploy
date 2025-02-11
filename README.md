@@ -20,6 +20,7 @@
 * Install and enable `libapache2-mpm-itk` module to allow different users per VirtualHosts:
   * `apt install libapache2-mpm-itk`
   * `a2enmod libapache2-mpm-itk`
+  * `a2enmod status`
 
 ### Install MySQL Server
 * Run `apt install mysql-server`
@@ -164,3 +165,12 @@ Create or edit crontab of user `apache-{env}` for each environment `{env}`:
 * Login as root.
 * Run: `crontab -e -u apache-{env}`
 * Add the following job to the end of the cronfile: `/var/www/{domain-name}/deployment/vendor/wp-cli/wp-cli/bin/wp backup create --path=/var/www/{domain-name}/deployment/wp --debug
+
+### Collect logs & metrics from Apache webserver
+Create a new Source in Telemetry: `wedding.sytesbook.com/apache`
+
+Install and configure Vector on Ubuntu or Debian:
+```
+curl -sSL https://telemetry.betterstack.com/setup-vector/apache/{source-token} -o /tmp/setup-vector.sh
+bash /tmp/setup-vector.sh
+```
