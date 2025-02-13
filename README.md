@@ -14,6 +14,13 @@
 * Run `apt full-upgrade`
 * Reboot the server
 
+### Create a swap file
+* `sudo fallocate -l [swapfile_size] [path_to_swapfile]` (should be ~equal to the size of RAM, e.g. 1G)
+* `chmod 600 /swapfil`
+* `mkswap /swapfile`
+* `swapon /swapfile`
+* Add an entry to the /etc/fstab: `/swapfile none swap sw 0 0`
+
 ### Install Apache Web Server
 * Run `apt install apache2`
 * Try to browse `http://{your-ip-address}`. It should show the Apache2 default page
