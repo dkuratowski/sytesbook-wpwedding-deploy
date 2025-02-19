@@ -1,4 +1,4 @@
-<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/25.0.2 Chrome/128.0.6613.186 Electron/32.2.5 Safari/537.36" version="25.0.2">
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.0.9 Chrome/128.0.6613.186 Electron/32.2.5 Safari/537.36" version="26.0.9">
   <diagram name="Server Directory Structure" id="slq-GmolcPxi06INoLlD">
     <mxGraphModel dx="2022" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -537,6 +537,24 @@
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="860" y="778" as="sourcePoint" />
             <mxPoint x="930" y="988" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Wg65tinskGJc9FwJ2CfC-1" value="scripts" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1ba1e2;fontColor=#ffffff;strokeColor=#006EAF;" vertex="1" parent="1">
+          <mxGeometry x="517" y="1230" width="70" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="Wg65tinskGJc9FwJ2CfC-2" value="backups" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1ba1e2;fontColor=#ffffff;strokeColor=#006EAF;" vertex="1" parent="1">
+          <mxGeometry x="517" y="1270" width="70" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="Wg65tinskGJc9FwJ2CfC-3" value="" style="endArrow=classic;html=1;rounded=0;edgeStyle=elbowEdgeStyle;" edge="1" parent="1" source="1epN-AGbNZ8dsCqa4cco-45" target="Wg65tinskGJc9FwJ2CfC-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="450" y="63" as="sourcePoint" />
+            <mxPoint x="527" y="1213" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Wg65tinskGJc9FwJ2CfC-4" value="" style="endArrow=classic;html=1;rounded=0;edgeStyle=elbowEdgeStyle;" edge="1" parent="1" source="1epN-AGbNZ8dsCqa4cco-45" target="Wg65tinskGJc9FwJ2CfC-2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="450" y="63" as="sourcePoint" />
+            <mxPoint x="527" y="1253" as="targetPoint" />
           </mxGeometry>
         </mxCell>
       </root>
