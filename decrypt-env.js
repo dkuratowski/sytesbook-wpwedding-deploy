@@ -31,7 +31,7 @@ if (output.error) {
 const writer = fs.createWriteStream(process.argv[3]);
 const writeLine = (line) => writer.write(`${line}\n`);
 for (const [key, value] of Object.entries(output.parsed)) {
-    writeLine(`${key}="${value}"`);
+    writeLine(`${key}='${value}'`);
 }
 writer.close();
 

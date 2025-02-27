@@ -14,40 +14,16 @@
 * Run `apt full-upgrade`
 * Reboot the server
 
-### Create a swap file
-* `sudo fallocate -l [swapfile_size] [path_to_swapfile]` (should be ~equal to the size of RAM, e.g. 1G)
-* `chmod 600 /swapfil`
-* `mkswap /swapfile`
-* `swapon /swapfile`
-* Add an entry to the /etc/fstab: `/swapfile none swap sw 0 0`
-
-### Install Apache Web Server
-* Run `apt install apache2`
-* Try to browse `http://{your-ip-address}`. It should show the Apache2 default page
-* Install and enable `libapache2-mpm-itk` module to allow different users per VirtualHosts:
-  * `apt install libapache2-mpm-itk`
-  * `a2enmod libapache2-mpm-itk`
-  * `a2enmod status`
-
-### Install MySQL Server
-* Run `apt install mysql-server`
-* Run `mysql_secure_installation`. This script will remove some insecure default settings and lock down access to your database system.
-* Try login to MySQL with `mysql`. You should see the MySQL prompt
-
-### Install PHP
-* Run `apt install php libapache2-mod-php php-mysql php-curl php-dom`
-* Check PHP version with `php -v`
-
 ### Create Directory Structure
 Create the directory structure on the server as depicted on the image below by blue boxes:
 ![Server Directory Structure](docs/sytesbook.wpwedding.deploy-server-dir-struct.drawio.png)
 
 ### Setup Service Users, Groups & Permissions
-Create the following service users for each environment {env}:
+Create the following service users for each environment `{env}`:
 * `apache-{env}`: The corresponding Apache virtual host will be running as this user.
-* `deploy-{env}`: The GitHub Actions workflow deploying to `{env}` will be running as this user.
+* `deploy-{env}`: The GitHub Actions workflow deploying to `{env}` and corresponding cronjobs will be running as this user.
 
-Create the following group for each environment as the primary group of the users created above for that environment:
+Create the following group for each environment `{env}`:
 * `sytesbook-{env}`: The group owner of all directories inside the environment root.
 
 Add the created users to the corresponding `sytesbook-{env}` group.
@@ -75,6 +51,16 @@ Set file permissions and ownerships of the directories inside each environment r
   * permissions for files: `rw-r----- (0640)`
 * `logs`:
   * owner: `apache-{env}`
+  * group owner: `sytesbook-{env}`
+  * permissions for directories: `rwxr-s--- (2750)`
+  * permissions for files: `rw-r----- (0640)`
+* `scripts`:
+  * owner: `deploy-{env}`
+  * group owner: `sytesbook-{env}`
+  * permissions for directories: `rwxr-s--- (2750)`
+  * permissions for files: `rw-r----- (0640)`
+* `backups`:
+  * owner: `deploy-{env}`
   * group owner: `sytesbook-{env}`
   * permissions for directories: `rwxr-s--- (2750)`
   * permissions for files: `rw-r----- (0640)`
@@ -110,6 +96,35 @@ Disable password authentication:
   * `deploy-{env}:x:1000:1000:,,,umask=0027:/home/deploy-{env}:/bin/bash
   * `apache-{env}:x:1001:1001:,,,umask=0027:/nonexistent:/usr/sbin/nologin
 
+### Create a swap file
+* `sudo fallocate -l [swapfile_size] [path_to_swapfile]` (should be ~equal to the size of RAM, e.g. 1G)
+* `chmod 600 /swapfil`
+* `mkswap /swapfile`
+* `swapon /swapfile`
+* Add an entry to the /etc/fstab: `/swapfile none swap sw 0 0`
+
+### Install and Configure AWS CLI
+Run the following commands as root:
+* `curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"`
+* `unzip awscliv2.zip` (install `unzip` if necessary with `apt install unzip`)
+* `./aws/install`
+
+### Install Apache Web Server
+* Run `apt install apache2`
+* Try to browse `http://{your-ip-address}`. It should show the Apache2 default page
+* Install and enable `libapache2-mpm-itk` module to allow different users per VirtualHosts:
+  * `apt install libapache2-mpm-itk`
+  * `a2enmod libapache2-mpm-itk`
+  * `a2enmod status`
+
+### Install MySQL Server
+* Run `apt install mysql-server`
+* Run `mysql_secure_installation`. This script will remove some insecure default settings and lock down access to your database system.
+* Try login to MySQL with `mysql`. You should see the MySQL prompt
+
+### Install PHP
+* Run `apt install php libapache2-mod-php php-mysql php-curl php-dom`
+* Check PHP version with `php -v`
 
 ### Configure Apache Web Server
 Create a new VirtualHost for each environment `{env}` at `/etc/apache2/sites-available/{domain-name}.conf` (where `{domain-name}` is the domain name corresponding to environment `{env}`) with the following contents:
@@ -166,12 +181,6 @@ Test if new user has proper permissions:
 * Login to WordPress
 * Activate the `Sytesbook WP-Wedding Theme` in the `Appearance/Themes` menu from the Admin Dashboard
 * Open `Settings/Permalinks` page and press `Save Changes` button at the bottom of the screen
-
-### Setup CRON job for creating backups
-Create or edit crontab of user `apache-{env}` for each environment `{env}`:
-* Login as root.
-* Run: `crontab -e -u apache-{env}`
-* Add the following job to the end of the cronfile: `/var/www/{domain-name}/deployment/vendor/wp-cli/wp-cli/bin/wp backup create --path=/var/www/{domain-name}/deployment/wp --debug
 
 ### Collect logs & metrics from Apache webserver
 Create a new Source in Telemetry: `wedding.sytesbook.com/apache`
