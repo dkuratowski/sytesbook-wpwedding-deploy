@@ -112,7 +112,7 @@ jobs:
           rm -fv ./model-domains-public/*
           rm -fv ./model-domains-public/.htaccess
           echo "Cleanup ./scripts directory"
-          rm -fv ./scripts/*
+          rm -rfv ./scripts/*
 
     - name: Deploy package to the web server
       uses: appleboy/scp-action@v0.1.7
