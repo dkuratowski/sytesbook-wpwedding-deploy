@@ -109,10 +109,6 @@ Run the following commands as root:
 * `unzip awscliv2.zip` (install `unzip` if necessary with `apt install unzip`)
 * `./aws/install`
 
-Create an AWS profile for the user `deploy-{env}` for each environment:
-* `aws configure --profile deploy-{env}`
-* follow on-screen instructions
-
 ### Install Apache Web Server
 * Run `apt install apache2`
 * Try to browse `http://{your-ip-address}`. It should show the Apache2 default page
@@ -185,12 +181,6 @@ Test if new user has proper permissions:
 * Login to WordPress
 * Activate the `Sytesbook WP-Wedding Theme` in the `Appearance/Themes` menu from the Admin Dashboard
 * Open `Settings/Permalinks` page and press `Save Changes` button at the bottom of the screen
-
-### Setup CRON job for creating backups
-Create or edit crontab of user `apache-{env}` for each environment `{env}`:
-* Login as root.
-* Run: `crontab -e -u apache-{env}`
-* Add the following job to the end of the cronfile: `/var/www/{domain-name}/deployment/vendor/wp-cli/wp-cli/bin/wp backup create --path=/var/www/{domain-name}/deployment/wp --debug
 
 ### Collect logs & metrics from Apache webserver
 Create a new Source in Telemetry: `wedding.sytesbook.com/apache`
