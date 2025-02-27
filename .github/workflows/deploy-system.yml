@@ -102,12 +102,17 @@ jobs:
         script: |
           echo "Cleanup old installation"
           cd ${{ vars.ENV_ROOT_DIR }}
+          echo "Cleanup ./deployment directory"
           rm -rfv ./deployment/*
           rm -fv ./deployment/.env
+          echo "Cleanup ./main-domain-public directory"
           rm -fv ./main-domain-public/*
           rm -fv ./main-domain-public/.htaccess
+          echo "Cleanup ./model-domains-public directory"
           rm -fv ./model-domains-public/*
           rm -fv ./model-domains-public/.htaccess
+          echo "Cleanup ./scripts directory"
+          rm -fv ./scripts/*
 
     - name: Deploy package to the web server
       uses: appleboy/scp-action@v0.1.7
@@ -156,3 +161,25 @@ jobs:
           ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-content
           ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-config.php
           ln -sv ${{ vars.ENV_ROOT_DIR }}/uploads
+
+    - name: Deploy scripts to the web server
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ vars.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        source: "./repos/sytesbook-wpwedding-deploy/scripts/backup.sh"
+        target: "${{ vars.ENV_ROOT_DIR }}/scripts"
+    
+    - name: Setup CRON jobs on the web server
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ vars.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        command_timeout: 30m
+        script: |
+          echo "Setup CRON job for nightly backup"
+          echo "${{ vars.BACKUP_CRON_SCHEDULE }} cd ${{ vars.ENV_ROOT_DIR }} && ./scripts/backup.sh" | crontab -
+          echo "CRON job successfully setup for nightly backup"
+          crontab -l
