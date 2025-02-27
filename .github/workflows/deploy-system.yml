@@ -169,6 +169,7 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
         source: "./repos/sytesbook-wpwedding-deploy/scripts/backup.sh"
+        strip_components: 3   # Remove "./repos/sytesbook-wpwedding-deploy/scripts" from the beginning of the source path
         target: "${{ vars.ENV_ROOT_DIR }}/scripts"
     
     - name: Setup CRON jobs on the web server
