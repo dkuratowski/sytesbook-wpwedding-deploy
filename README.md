@@ -123,7 +123,7 @@ Run the following commands as root:
 * Try login to MySQL with `mysql`. You should see the MySQL prompt
 
 ### Install PHP
-* Run `apt install php libapache2-mod-php php-mysql php-curl php-dom`
+* Run `apt install php libapache2-mod-php php-mysql php-curl php-dom php-gd`
 * Check PHP version with `php -v`
 
 ### Configure Apache Web Server
