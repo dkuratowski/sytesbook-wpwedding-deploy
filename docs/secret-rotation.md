@@ -1,6 +1,5 @@
 # Secret Rotation Process
 This document contains a detailed description about how to rotate all the secrets. The steps below shall be performed for each environment `{env}` (where the given step is applicable).
-We are using [Dotenv Vault](https://vault.dotenv.org/account/login) for central secret management. Secrets are decoded during deployment time and stored in the `/var/www/{domain-name}/deployment/.env` files on `staging` and `production` environments. Therefore, we have to update the secrets first in the deployed `.env` files in order to avoid downtime on the live environment, then in Dotenv Vault so that next deployments can also use the updated secrets.
 
 ## SSH Keys for `deploy-{env}` user
 Generate new SSH keypair for user `deploy-{env}` on the local machine:
@@ -39,41 +38,84 @@ Add the new SSH private key to the environment secrets:
 * Open the appropriate environment and update the `GIT_ACCESS_TOKEN` environment secret
 
 ## WordPress Secret Keys
-* Copy the current value of the `AUTH_KEY` environment variable to `AUTH_KEY_{n}` where 0 <= `n` < 10 is the lowest number such that `AUTH_KEY_{n}` does not exist
-* Regenerate WordPress secret keys [here](https://api.wordpress.org/secret-key/1.1/salt/)
-* Copy the generated values to the `AUTH_KEY`, `SECURE_AUTH_KEY`, `LOGGED_IN_KEY`, `NONCE_KEY`, `AUTH_SALT`, `SECURE_AUTH_SALT`, `LOGGED_IN_SALT` and `NONCE_SALT` environment variables respectively.
+* Login to [Dotenv Vault](https://vault.dotenv.org/account/login)
+* Regenerate WordPress secret keys [here](https://api.wordpress.org/secret-key/1.1/salt/) and update the appropriate environment
+  * Copy the current value of the `AUTH_KEY` environment variable to `PREVIOUS_AUTH_KEY_{n}` where 0 <= `n` < 10 is the lowest number such that `PREVIOUS_AUTH_KEY_{n}` does not exist
+  * Copy the generated values to the `AUTH_KEY`, `SECURE_AUTH_KEY`, `LOGGED_IN_KEY`, `NONCE_KEY`, `AUTH_SALT`, `SECURE_AUTH_SALT`, `LOGGED_IN_SALT` and `NONCE_SALT` environment variables respectively.
+* Run: `npx dotenv-vault pull`
+* Commit and push `.env.vault` to the repository
+* Redeploy
 
 ## Database Password
 * Connect to DB as root: `mysql`
 * Switch to the appropriate database: `USE db_wedding_{env}_sytesbook;`
-* Regenerate the password of the appropriate user: `ALTER USER usr_wedding_{env}_sytesbook IDENTIFIED BY RANDOM PASSWORD;`
-* Save the generated password to the `DB_PASSWORD` environment secret.
+* Regenerate the password of the appropriate user: `ALTER USER 'usr_wedding_{env}_sytesbook'@'localhost' IDENTIFIED BY RANDOM PASSWORD;`
+* Copy the new password to the clipboard
 * Exit from MySQL: `exit`
 
 Test if new user has proper permissions:
 * Login to MySQL console by the user: `mysql -u usr_wedding_{env}_sytesbook -p`
-* Enter the `{password}` that was given to the new user.
+* Enter the new `{password}` when prompted
 * Query: `SHOW DATABASES;`
 * You should see `db_wedding_{env}_sytesbook`, `information_schema` and `performance_schema` listed.
 * Exit from MySQL: `exit`
 
-## BetterStack Token
+Update the new DB password to Dotenv Vault:
+* Login to [Dotenv Vault](https://vault.dotenv.org/account/login)
+* Open the appropriate environment
+* Update the `DB_PASSWORD` environment secret
+* Run: `npx dotenv-vault pull`
+* Commit and push `.env.vault` to the repository
+* Redeploy
 
-## Mailtrap (only for `development` environment)
-* Go to settings of [`My Inbox`](https://mailtrap.io/inboxes/2433811/messages) and press `Reset Credentials`
-* Copy the updated credentials to the `SMTP_USER` and `SMTP_PASSWORD` environment variables
+## BetterStack Token (only applicable for `staging` and `production` environments)
+Note: It is not possible to rotate at the moment. Source needs to be recreated.
+* Go to [BetterStack sources](https://telemetry.betterstack.com/team/158180/sources)
+* Rename current log sources (e.g. append `/archived` to their names)
+* Create new log sources
+* Copy source token and ingesting host to the clipboard
+* Login to [Dotenv Vault](https://vault.dotenv.org/account/login)
+* Open the appropriate environment
+* Update the `BETTERSTACK_TOKEN` and `BETTERSTACK_INGESTING_HOST` environment secrets with the new values saved to the clipboard
+* Run: `npx dotenv-vault pull`
+* Commit and push `.env.vault` to the repository
+* Redeploy
+* Update the sources of the dashboards to the new log sources
+* Recreate the `response_status` metric (JSON source: monolog.context.response.status, type: Int64, aggregation: no aggregation) and add it to the new log sources
 
-## AWS Access Keys and Secret Access Keys
-### `{env}.data-backup-wedding-sytesbook-com-s3-user` (only for `staging` and `production` environments)
+## AWS Access Key for Backup User (only applicable for `staging` and `production` environments)
 * Go to the [IAM Users page](https://us-east-1.console.aws.amazon.com/iam/home?region=eu-central-1#/users) and select the `{env}.data-backup-wedding-sytesbook-com-s3-user` user.
 * Move to the `Security Credentials` tab
-* Create a new Access Key
-* Copy the updated credentials to the `S3_BACKUP_ACCESS_KEY` and `S3_BACKUP_SECRET_ACCESS_KEY` environment variables
+* Create a new Access Key and copy the credentials to the clipboard
+* Login to [Dotenv Vault](https://vault.dotenv.org/account/login)
+* Open the appropriate environment
+* Update the `S3_BACKUP_ACCESS_KEY` and `S3_BACKUP_SECRET_ACCESS_KEY` environment secrets with the new credentials
+* Run: `npx dotenv-vault pull`
+* Commit and push `.env.vault` to the repository
+* Redeploy
 * Deactivate / delete the old access key
 
-### `{env}.ses-smtp-user` (only for `staging` and `production` environments)
-* Go to the [IAM Users page](https://us-east-1.console.aws.amazon.com/iam/home?region=eu-central-1#/users) and select the `{env}.ses-smtp-user` user.
-* Move to the `Security Credentials` tab
-* Create a new Access Key
-* Copy the updated credentials to the `SMTP_USER` and `SMTP_PASSWORD` environment variables
-* Deactivate / delete the old access key
+## SMTP credentials on `development` environment (Mailtrap)
+* Go to settings of [`My Inbox`](https://mailtrap.io/inboxes/2433811/messages) and press `Reset Credentials`
+* Copy the new SMTP credentials to the clipboard
+* Login to [Dotenv Vault](https://vault.dotenv.org/account/login)
+* Open the `development` environment
+* Update the `SMTP_USER` and `SMTP_PASSWORD` environment secrets with the new SMTP credentials
+* Run: `npx dotenv-vault pull`
+* Commit and push `.env.vault` to the repository
+
+### SMTP credentials on `staging` and `production` environments (AWS SES)
+* Go to the [IAM page](https://us-east-1.console.aws.amazon.com/iam/home?region=eu-central-1#/users) and delete the `{env}.ses-smtp-user` user.
+* Go to the [AWS SES page](https://eu-central-1.console.aws.amazon.com/ses/home?region=eu-central-1#/account)
+* Go to `SMTP settings` and click on `Create SMTP credentials`
+* On the `Create user for SMTP` section set the user name to `{env}.ses-smtp-user` and click on `Create user`
+* Copy the new SMTP credentials to the clipboard
+* Remove the policy from the created user that is added by default
+* Remove the user group that is created by default
+* Attach the `{env}.ses-send-email-policy` policy directly to the created user
+* Login to [Dotenv Vault](https://vault.dotenv.org/account/login)
+* Open the appropriate environment
+* Update the `SMTP_USER` and `SMTP_PASSWORD` environment secrets with the new SMTP credentials
+* Run: `npx dotenv-vault pull`
+* Commit and push `.env.vault` to the repository
+* Redeploy
