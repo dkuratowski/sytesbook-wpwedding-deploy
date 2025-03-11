@@ -10,10 +10,15 @@ Generate new SSH keypair for user `deploy-{env}` on the local machine:
   * Set keypair name to `deploy-{env}`
 
 Update the SSH public key for user `deploy-{env}` on the server:
-* `ssh-copy-id -i ~/.ssh_sytesbook/deploy-{env}.pub deploy-{env}@{ip-address}`
+* Add the new key to the server:
+  * SSH into the server with the old key: `ssh -i ~/.ssh_sytesbook/deploy-{env}-old.pub deploy-{env}@{ip-address}`
+  * Add the new key to `~/.ssh/authorized_keys`
 * Remove the old key from the server:
   * SSH into the server with the new key: `ssh -i ~/.ssh_sytesbook/deploy-{env}.pub deploy-{env}@{ip-address}`
   * Remove the old key from `~/.ssh/authorized_keys`
+* Check if the old key can no longer be used to SSH into the server:
+  * Try `ssh -i ~/.ssh_sytesbook/deploy-{env}-old.pub deploy-{env}@{ip-address}`
+  * The server shall reject the connection.
 
 Add the new SSH private key to the environment secrets:
 * Go to the [environment settings page](https://github.com/dkuratowski/sytesbook-wpwedding-deploy/settings/environments) of the `dkuratowski/sytesbook-wpwedding-deploy` repository
