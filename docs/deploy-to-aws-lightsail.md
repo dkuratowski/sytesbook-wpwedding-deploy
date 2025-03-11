@@ -70,10 +70,12 @@ Temporarily enable password authentication on the server:
 * Setup password for users `deploy-{env}`: `passwd deploy-{env}`
 
 Generate SSH keypair for user `deploy-{env}` on the local machine:
-* `ssh-keygen -t ed25519 -C 'SSH key for deploy-{env} on {server-name}'`
+* `ssh-keygen -t ed25519 -C 'deploy-{env}@{server-name} {yyyymmdd}'`
+  * Set keypair location to ~/.ssh_sytesbook
+  * Set keypair name to `deploy-{env}`
 
 Upload the generated SSH public key for user `deploy-{env}` to the server:
-* `ssh-copy-id -i .ssh_sytesbook/deploy-{env}.pub deploy-{env}@{ip-address}`
+* `ssh-copy-id -i ~/.ssh_sytesbook/deploy-{env}.pub deploy-{env}@{ip-address}`
 * This will ask for password of deploy-{env}
 
 Disable password authentication:

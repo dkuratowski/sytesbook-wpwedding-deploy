@@ -2,6 +2,34 @@
 This document contains a detailed description about how to rotate all the secrets. The steps below shall be performed for each environment `{env}` (where the given step is applicable).
 We are using [Dotenv Vault](https://vault.dotenv.org/account/login) for central secret management. Secrets are decoded during deployment time and stored in the `/var/www/{domain-name}/deployment/.env` files on `staging` and `production` environments. Therefore, we have to update the secrets first in the deployed `.env` files in order to avoid downtime on the live environment, then in Dotenv Vault so that next deployments can also use the updated secrets.
 
+## SSH Keys for `deploy-{env}` user
+Generate new SSH keypair for user `deploy-{env}` on the local machine:
+* Rename old key files for user `deploy-{env}` on the local machine in the `~/.ssh_sytesbook` folder to `deploy-{env}-old` and `deploy-{env}-old.pub`
+* `ssh-keygen -t ed25519 -C 'deploy-{env}@{server-name} {yyyymmdd}'`
+  * Set keypair location to ~/.ssh_sytesbook
+  * Set keypair name to `deploy-{env}`
+
+Update the SSH public key for user `deploy-{env}` on the server:
+* `ssh-copy-id -i ~/.ssh_sytesbook/deploy-{env}.pub deploy-{env}@{ip-address}`
+* Remove the old key from the server:
+  * SSH into the server with the new key: `ssh -i ~/.ssh_sytesbook/deploy-{env}.pub deploy-{env}@{ip-address}`
+  * Remove the old key from `~/.ssh/authorized_keys`
+
+Add the new SSH private key to the environment secrets:
+* Go to the [environment settings page](https://github.com/dkuratowski/sytesbook-wpwedding-deploy/settings/environments) of the `dkuratowski/sytesbook-wpwedding-deploy` repository
+* Open the appropriate environment and update the `SSH_KEY` environment secret
+
+## Dotenv Vault Key
+* Follow the instructions [here](https://www.dotenv.org/docs/dotenv-vault/rotatekey)
+* Go to the [environment settings page](https://github.com/dkuratowski/sytesbook-wpwedding-deploy/settings/environments) of the `dkuratowski/sytesbook-wpwedding-deploy` repository
+* Open the appropriate environment and update the `DOTENV_VAULT_KEY` environment secret
+
+## Access Token for Deployment GitHub Action
+* Go to the [Personal Access Tokens page](https://github.com/settings/personal-access-tokens) on GitHub
+* Open and regenerate token `sytesbook-wpwedding-deploy-{env}` and copy it to the clipboard
+* Go to the [environment settings page](https://github.com/dkuratowski/sytesbook-wpwedding-deploy/settings/environments) of the `dkuratowski/sytesbook-wpwedding-deploy` repository
+* Open the appropriate environment and update the `GIT_ACCESS_TOKEN` environment secret
+
 ## WordPress Secret Keys
 * Copy the current value of the `AUTH_KEY` environment variable to `AUTH_KEY_{n}` where 0 <= `n` < 10 is the lowest number such that `AUTH_KEY_{n}` does not exist
 * Regenerate WordPress secret keys [here](https://api.wordpress.org/secret-key/1.1/salt/)
@@ -41,25 +69,3 @@ Test if new user has proper permissions:
 * Create a new Access Key
 * Copy the updated credentials to the `SMTP_USER` and `SMTP_PASSWORD` environment variables
 * Deactivate / delete the old access key
-
-## SSH Keys for `deploy-{env}` user
-Generate new SSH keypair for user `deploy-{env}` on the local machine:
-* `ssh-keygen -t ed25519 -C 'SSH key for deploy-{env} on {server-name}'`
-
-Upload the generated SSH public key for user `deploy-{env}` to the server:
-* `ssh-copy-id -i .ssh_sytesbook/deploy-{env}.pub deploy-{env}@{ip-address}`
-
-Add the generated SSH private key to the environment secrets:
-* Go to the [environment settings page](https://github.com/dkuratowski/sytesbook-wpwedding-deploy/settings/environments) of the `dkuratowski/sytesbook-wpwedding-deploy` repository
-* Open the appropriate environment and update the `SSH_KEY` environment secret
-
-## Dotenv Vault Key
-* Follow the instructions [here](https://www.dotenv.org/docs/dotenv-vault/rotatekey)
-* Go to the [environment settings page](https://github.com/dkuratowski/sytesbook-wpwedding-deploy/settings/environments) of the `dkuratowski/sytesbook-wpwedding-deploy` repository
-* Open the appropriate environment and update the `DOTENV_VAULT_KEY` environment secret
-
-## Access Token for Deployment GitHub Action
-* Go to the [Personal Access Tokens page](https://github.com/settings/personal-access-tokens) on GitHub
-* Open and regenerate token `sytesbook-wpwedding-deploy-{env}` and copy it to the clipboard
-* Go to the [environment settings page](https://github.com/dkuratowski/sytesbook-wpwedding-deploy/settings/environments) of the `dkuratowski/sytesbook-wpwedding-deploy` repository
-* Open the appropriate environment and update the `GIT_ACCESS_TOKEN` environment secret
