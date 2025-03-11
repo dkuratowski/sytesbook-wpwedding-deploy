@@ -12,7 +12,7 @@ Generate new SSH keypair for user `deploy-{env}` on the local machine:
 Update the SSH public key for user `deploy-{env}` on the server:
 * Add the new key to the server:
   * SSH into the server with the old key: `ssh -i ~/.ssh_sytesbook/deploy-{env}-old.pub deploy-{env}@{ip-address}`
-  * Add the new key to `~/.ssh/authorized_keys`
+  * Add the new key to `~/.ssh/authorized_keys`: `ssh-ed25519 {public-key} deploy-{env}@{server-name} {yyyymmdd}`
 * Remove the old key from the server:
   * SSH into the server with the new key: `ssh -i ~/.ssh_sytesbook/deploy-{env}.pub deploy-{env}@{ip-address}`
   * Remove the old key from `~/.ssh/authorized_keys`
