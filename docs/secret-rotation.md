@@ -25,9 +25,12 @@ Add the new SSH private key to the environment secrets:
 * Open the appropriate environment and update the `SSH_KEY` environment secret
 
 ## Dotenv Vault Key
-* Follow the instructions [here](https://www.dotenv.org/docs/dotenv-vault/rotatekey)
+* Run: `npx dotenv-vault rotatekey {env}`
+  * The new decryption key is printed to the console
+* Run: `npx dotenv-vault build`
+* Commit and push `.env.vault` to the repository
 * Go to the [environment settings page](https://github.com/dkuratowski/sytesbook-wpwedding-deploy/settings/environments) of the `dkuratowski/sytesbook-wpwedding-deploy` repository
-* Open the appropriate environment and update the `DOTENV_VAULT_KEY` environment secret
+* Open the appropriate environment and update the `DOTENV_VAULT_KEY` environment secret with the new decryption key
 
 ## Access Token for Deployment GitHub Action
 * Go to the [Personal Access Tokens page](https://github.com/settings/personal-access-tokens) on GitHub
