@@ -183,7 +183,4 @@ jobs:
           echo "Setup CRON job for nightly backup"
           echo "${{ vars.BACKUP_CRON_SCHEDULE }} cd ${{ vars.ENV_ROOT_DIR }} && ./scripts/backup.sh" | crontab -
           echo "CRON job successfully setup for nightly backup"
-          echo "Setup CRON job for the SMTP check script"
-          echo "${{ vars.SMTP_CHECK_CRON_SCHEDULE }} cd ${{ vars.ENV_ROOT_DIR }} && ./scripts/smtp-check.sh" | crontab -
-          echo "CRON job successfully setup for the SMTP check script"
           crontab -l
