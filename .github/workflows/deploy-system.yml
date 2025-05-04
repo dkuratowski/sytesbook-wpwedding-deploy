@@ -181,7 +181,9 @@ jobs:
         command_timeout: 30m
         script: |
           echo "Setup CRON jobs"
+          ( \
           echo "${{ vars.BACKUP_CRON_SCHEDULE }} cd ${{ vars.ENV_ROOT_DIR }} && ./scripts/backup.sh" && \
-          echo "${{ vars.SMTP_CHECK_CRON_SCHEDULE }} cd ${{ vars.ENV_ROOT_DIR }} && ./scripts/smtp-check.sh" | crontab -
+          echo "${{ vars.SMTP_CHECK_CRON_SCHEDULE }} cd ${{ vars.ENV_ROOT_DIR }} && ./scripts/smtp-check.sh" \
+          ) | crontab -
           echo "CRON jobs successfully setup"
           crontab -l
