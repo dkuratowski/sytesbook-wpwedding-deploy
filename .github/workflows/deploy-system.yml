@@ -168,7 +168,7 @@ jobs:
         host: ${{ vars.SSH_HOST }}
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
-        source: "./repos/sytesbook-wpwedding-deploy/scripts/*.sh"
+        source: "./repos/sytesbook-wpwedding-deploy/scripts/backup.sh,./repos/sytesbook-wpwedding-deploy/scripts/smtp-check.sh"
         strip_components: 4   # Remove "./repos/sytesbook-wpwedding-deploy/scripts" from the beginning of the source path
         target: "${{ vars.ENV_ROOT_DIR }}/scripts"
     
