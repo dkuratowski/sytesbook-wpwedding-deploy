@@ -144,14 +144,15 @@ Create a new VirtualHost for each environment `{env}` at `/etc/apache2/sites-ava
 
 Enable the new VirtualHost: `a2ensite {domain-name}`
 
-Create a new configuration at `/etc/apache2/sites-available/enable-rewrite.conf` with the following contents:
+Create a new configuration at `/etc/apache2/conf-available/sytesbook.conf` with the following contents:
 ```
 <Directory /var/www/>
+    Options -Indexes
     AllowOverride All
 </Directory>
 ```
 
-Enable the new configuration: `a2enconf enable-rewrite`
+Enable the new configuration: `a2enconf sytesbook`
 
 Restart Apache: `systemctl reload apache2`
 
