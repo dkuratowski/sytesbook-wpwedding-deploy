@@ -168,7 +168,7 @@ jobs:
         host: ${{ vars.SSH_HOST }}
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
-        source: "./repos/sytesbook-wpwedding-deploy/scripts/backup.sh"
+        source: "./repos/sytesbook-wpwedding-deploy/scripts/backup.sh,./repos/sytesbook-wpwedding-deploy/scripts/smtp-check.sh"
         strip_components: 4   # Remove "./repos/sytesbook-wpwedding-deploy/scripts" from the beginning of the source path
         target: "${{ vars.ENV_ROOT_DIR }}/scripts"
     
@@ -180,7 +180,10 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         command_timeout: 30m
         script: |
-          echo "Setup CRON job for nightly backup"
-          echo "${{ vars.BACKUP_CRON_SCHEDULE }} cd ${{ vars.ENV_ROOT_DIR }} && ./scripts/backup.sh" | crontab -
-          echo "CRON job successfully setup for nightly backup"
+          echo "Setup CRON jobs"
+          ( \
+          echo "${{ vars.BACKUP_CRON_SCHEDULE }} cd ${{ vars.ENV_ROOT_DIR }} && ./scripts/backup.sh" && \
+          echo "${{ vars.SMTP_CHECK_CRON_SCHEDULE }} cd ${{ vars.ENV_ROOT_DIR }} && ./scripts/smtp-check.sh" \
+          ) | crontab -
+          echo "CRON jobs successfully setup"
           crontab -l
