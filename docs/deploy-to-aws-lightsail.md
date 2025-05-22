@@ -127,11 +127,11 @@ Run the following commands as root:
 * Check PHP version with `php -v`
 
 ## Configure Apache Web Server
-Create a new VirtualHost for each environment `{env}` at `/etc/apache2/sites-available/{domain-name}.conf` (where `{domain-name}` is the domain name corresponding to environment `{env}`) with the following contents:
+Create a new VirtualHost for each environment `{env}` at `/etc/apache2/sites-available/{domain-name}.conf`:
 ```
 <VirtualHost *:80>
     ServerName {domain-name}
-    ServerAlias www.{domain-name}
+    ServerAlias {alias-domain-name-1} {alias-domain-name-2} {alias-domain-name-3} ...
     ServerAdmin contact@example.com
     DocumentRoot /var/www/{domain-name}/main-domain-public
     <IfModule mpm_itk_module>
@@ -141,6 +141,7 @@ Create a new VirtualHost for each environment `{env}` at `/etc/apache2/sites-ava
     CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
 ```
+Note: `{domain-name}` and `{alias-domain-name-n}` are the domain name and alias domain names corresponding to environment `{env}`.
 
 Enable the new VirtualHost: `a2ensite {domain-name}`
 
