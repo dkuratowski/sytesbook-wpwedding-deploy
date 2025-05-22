@@ -136,10 +136,6 @@ jobs:
           cd ${{ vars.ENV_ROOT_DIR }}/deployment
           tar -xzf package.tar.gz
           rm package.tar.gz
-          echo "Creating flag directory"
-          cd ${{ vars.ENV_ROOT_DIR }}/deployment/wp
-          mkdir flags
-          chmod g+w flags
           echo "Creating symbolic links"
           cd ${{ vars.ENV_ROOT_DIR }}/main-domain-public
           ln -sv ${{ vars.ENV_ROOT_DIR }}/uploads
@@ -161,6 +157,9 @@ jobs:
           ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-content
           ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-config.php
           ln -sv ${{ vars.ENV_ROOT_DIR }}/uploads
+          echo "Executing migrations"
+          cd ${{ vars.ENV_ROOT_DIR }}/deployment
+          ./vendor/wp-cli/wp-cli/bin/wp migrations up --path=./wp
 
     - name: Deploy scripts to the web server
       uses: appleboy/scp-action@v0.1.7
