@@ -94,96 +94,96 @@ jobs:
         npm install -g @dotenvx/dotenvx
         ./repos/sytesbook-wpwedding-deploy/create-package.sh
 
-    # - name: Cleanup old installation
-    #   uses: appleboy/ssh-action@v0.1.10
-    #   with:
-    #     host: ${{ vars.SSH_HOST }}
-    #     username: ${{ secrets.SSH_USER }}
-    #     key: ${{ secrets.SSH_KEY }}
-    #     command_timeout: 30m
-    #     script: |
-    #       echo "Cleanup old installation"
-    #       cd ${{ vars.ENV_ROOT_DIR }}
-    #       echo "Cleanup ./deployment directory"
-    #       rm -rfv ./deployment/*
-    #       rm -fv ./deployment/.env
-    #       echo "Cleanup ./main-domain-public directory"
-    #       rm -fv ./main-domain-public/*
-    #       rm -fv ./main-domain-public/.htaccess
-    #       echo "Cleanup ./model-domains-public directory"
-    #       rm -fv ./model-domains-public/*
-    #       rm -fv ./model-domains-public/.htaccess
-    #       echo "Cleanup ./scripts directory"
-    #       rm -rfv ./scripts/*
+    - name: Cleanup old installation
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ vars.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        command_timeout: 30m
+        script: |
+          echo "Cleanup old installation"
+          cd ${{ vars.ENV_ROOT_DIR }}
+          echo "Cleanup ./deployment directory"
+          rm -rfv ./deployment/*
+          rm -fv ./deployment/.env
+          echo "Cleanup ./main-domain-public directory"
+          rm -fv ./main-domain-public/*
+          rm -fv ./main-domain-public/.htaccess
+          echo "Cleanup ./model-domains-public directory"
+          rm -fv ./model-domains-public/*
+          rm -fv ./model-domains-public/.htaccess
+          echo "Cleanup ./scripts directory"
+          rm -rfv ./scripts/*
 
-    # - name: Deploy package to the web server
-    #   uses: appleboy/scp-action@v0.1.7
-    #   with:
-    #     host: ${{ vars.SSH_HOST }}
-    #     username: ${{ secrets.SSH_USER }}
-    #     key: ${{ secrets.SSH_KEY }}
-    #     source: "./package.tar.gz"
-    #     target: "${{ vars.ENV_ROOT_DIR }}/deployment"
+    - name: Deploy package to the web server
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ vars.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        source: "./package.tar.gz"
+        target: "${{ vars.ENV_ROOT_DIR }}/deployment"
 
-    # - name: Install package
-    #   uses: appleboy/ssh-action@v0.1.10
-    #   with:
-    #     host: ${{ vars.SSH_HOST }}
-    #     username: ${{ secrets.SSH_USER }}
-    #     key: ${{ secrets.SSH_KEY }}
-    #     command_timeout: 30m
-    #     script: |
-    #       echo "Installing package"
-    #       echo "Umask: $(umask)"
-    #       cd ${{ vars.ENV_ROOT_DIR }}/deployment
-    #       tar -xzf package.tar.gz
-    #       rm package.tar.gz
-    #       echo "Creating symbolic links"
-    #       cd ${{ vars.ENV_ROOT_DIR }}/main-domain-public
-    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/uploads
-    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/wp-admin
-    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-content
-    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/wp-includes
-    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/.htaccess
-    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/index.php
-    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/wp-login.php
-    #       cd ${{ vars.ENV_ROOT_DIR }}/model-domains-public
-    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/uploads
-    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-content
-    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/wp-includes
-    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/.htaccess
-    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/index.php
-    #       cd ${{ vars.ENV_ROOT_DIR }}/deployment
-    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/logs
-    #       cd ${{ vars.ENV_ROOT_DIR }}/deployment/wp
-    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-content
-    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-config.php
-    #       ln -sv ${{ vars.ENV_ROOT_DIR }}/uploads
-    #       echo "Executing migrations"
-    #       cd ${{ vars.ENV_ROOT_DIR }}/deployment
-    #       ./vendor/wp-cli/wp-cli/bin/wp migrations up --path=./wp
+    - name: Install package
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ vars.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        command_timeout: 30m
+        script: |
+          echo "Installing package"
+          echo "Umask: $(umask)"
+          cd ${{ vars.ENV_ROOT_DIR }}/deployment
+          tar -xzf package.tar.gz
+          rm package.tar.gz
+          echo "Creating symbolic links"
+          cd ${{ vars.ENV_ROOT_DIR }}/main-domain-public
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/uploads
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/wp-admin
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-content
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/wp-includes
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/.htaccess
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/index.php
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/wp-login.php
+          cd ${{ vars.ENV_ROOT_DIR }}/model-domains-public
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/uploads
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-content
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/wp-includes
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/.htaccess
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/wp/index.php
+          cd ${{ vars.ENV_ROOT_DIR }}/deployment
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/logs
+          cd ${{ vars.ENV_ROOT_DIR }}/deployment/wp
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-content
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/deployment/src/wp-config.php
+          ln -sv ${{ vars.ENV_ROOT_DIR }}/uploads
+          echo "Executing migrations"
+          cd ${{ vars.ENV_ROOT_DIR }}/deployment
+          ./vendor/wp-cli/wp-cli/bin/wp migrations up --path=./wp
 
-    # - name: Deploy scripts to the web server
-    #   uses: appleboy/scp-action@v0.1.7
-    #   with:
-    #     host: ${{ vars.SSH_HOST }}
-    #     username: ${{ secrets.SSH_USER }}
-    #     key: ${{ secrets.SSH_KEY }}
-    #     source: "./repos/sytesbook-wpwedding-deploy/scripts/backup.sh"
-    #     strip_components: 4   # Remove "./repos/sytesbook-wpwedding-deploy/scripts" from the beginning of the source path
-    #     target: "${{ vars.ENV_ROOT_DIR }}/scripts"
+    - name: Deploy scripts to the web server
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ vars.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        source: "./repos/sytesbook-wpwedding-deploy/scripts/backup.sh"
+        strip_components: 4   # Remove "./repos/sytesbook-wpwedding-deploy/scripts" from the beginning of the source path
+        target: "${{ vars.ENV_ROOT_DIR }}/scripts"
     
-    # - name: Setup CRON jobs on the web server
-    #   uses: appleboy/ssh-action@v0.1.10
-    #   with:
-    #     host: ${{ vars.SSH_HOST }}
-    #     username: ${{ secrets.SSH_USER }}
-    #     key: ${{ secrets.SSH_KEY }}
-    #     command_timeout: 30m
-    #     script: |
-    #       echo "Setup CRON jobs"
-    #       ( \
-    #       echo "${{ vars.BACKUP_CRON_SCHEDULE }} cd ${{ vars.ENV_ROOT_DIR }} && ./scripts/backup.sh" \
-    #       ) | crontab -
-    #       echo "CRON jobs successfully setup"
-    #       crontab -l
+    - name: Setup CRON jobs on the web server
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ vars.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        command_timeout: 30m
+        script: |
+          echo "Setup CRON jobs"
+          ( \
+          echo "${{ vars.BACKUP_CRON_SCHEDULE }} cd ${{ vars.ENV_ROOT_DIR }} && ./scripts/backup.sh" \
+          ) | crontab -
+          echo "CRON jobs successfully setup"
+          crontab -l
