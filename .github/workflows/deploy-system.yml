@@ -88,8 +88,10 @@ jobs:
     - name: "Create package"
       id: create_package
       env:
-        DOTENV_KEY: ${{ secrets.DOTENV_VAULT_KEY }}
+        DOTENV_PRIVATE_KEY: ${{ secrets.DOTENV_PRIVATE_KEY }}
+        ENVIRONMENT: ${{ inputs.environment }}
       run: |
+        npm install -g @dotenvx/dotenvx
         ./repos/sytesbook-wpwedding-deploy/create-package.sh
 
     - name: Cleanup old installation

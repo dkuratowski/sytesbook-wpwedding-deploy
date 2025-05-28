@@ -166,7 +166,7 @@ Restart Apache: `systemctl reload apache2`
 * Generate a new random password (64 characters recommended). In order not to mass up the .env files prefer to use only the following characters: `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-+*/=_@&%?`
 * Connect to DB as root: `mysql`
 * Create new database for environment `{env}`: `CREATE DATABASE db_wedding_{env}_sytesbook;`
-* Create user for the new database: `CREATE USER usr_wedding_{env}_sytesbook@localhost IDENTIFIED BY RANDOM PASSWORD;`
+* Create user for the new database: `CREATE USER usr_wedding_{env}_sytesbook@localhost IDENTIFIED BY '{new-password}';`
 * Save the generated password to the `DB_PASSWORD` environment secret.
 * Give the user permission over the new database: `GRANT ALL ON db_wedding_{env}_sytesbook.* TO usr_wedding_{env}_sytesbook@localhost;`
 * Exit from MySQL: `exit`

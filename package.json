@@ -1,5 +1,5 @@
 {
-    "dependencies": {
-        "dotenv": "^16.4.1"
-    }
+  "dependencies": {
+    "@dotenvx/dotenvx": "^1.44.1"
+  }
 }
