@@ -34,7 +34,8 @@ if ! [[ $? -eq 0 ]]; then
     echo "Failed to copy .env.$ENVIRONMENT to .env"
     exit 1
 fi
-npx dotenvx decrypt -f ./repos/sytesbook-wpwedding/.env
+
+dotenvx decrypt -f ./repos/sytesbook-wpwedding/.env
 echo "  Done"
 
 
