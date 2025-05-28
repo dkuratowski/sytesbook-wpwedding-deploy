@@ -47,6 +47,7 @@ Add the new SSH private key to the environment secrets:
 * Redeploy
 
 ## Database Password
+* Generate a new random DB password (64 characters recommended). In order not to mass up the .env files prefer to use only the following characters: `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-+*/=_@&%?`
 * Connect to DB as root: `mysql`
 * Switch to the appropriate database: `USE db_wedding_{env}_sytesbook;`
 * Regenerate the password of the appropriate user: `ALTER USER 'usr_wedding_{env}_sytesbook'@'localhost' IDENTIFIED BY RANDOM PASSWORD;`

@@ -163,6 +163,7 @@ Restart Apache: `systemctl reload apache2`
 * Follow instructions in the terminal
 
 ## Create WordPress databases
+* Generate a new random password (64 characters recommended). In order not to mass up the .env files prefer to use only the following characters: `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-+*/=_@&%?`
 * Connect to DB as root: `mysql`
 * Create new database for environment `{env}`: `CREATE DATABASE db_wedding_{env}_sytesbook;`
 * Create user for the new database: `CREATE USER usr_wedding_{env}_sytesbook@localhost IDENTIFIED BY RANDOM PASSWORD;`
