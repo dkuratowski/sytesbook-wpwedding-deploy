@@ -181,7 +181,7 @@ jobs:
         script: |
           echo "Setup CRON jobs"
           ( \
-          echo "${{ vars.BACKUP_CRON_SCHEDULE }} cd ${{ vars.ENV_ROOT_DIR }} && ./scripts/backup.sh" && \
+          echo "${{ vars.BACKUP_CRON_SCHEDULE }} cd ${{ vars.ENV_ROOT_DIR }} && ./scripts/backup.sh" \
           ) | crontab -
           echo "CRON jobs successfully setup"
           crontab -l
