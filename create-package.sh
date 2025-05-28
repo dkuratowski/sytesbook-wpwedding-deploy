@@ -31,11 +31,15 @@
 echo "* Decrypting .env.$ENVIRONMENT"
 cat ./repos/sytesbook-wpwedding/.env.$ENVIRONMENT > ./repos/sytesbook-wpwedding/.env
 if ! [[ $? -eq 0 ]]; then
-    echo "Failed to copy .env.$ENVIRONMENT to .env"
+    echo "Failed to create a copy of ./repos/sytesbook-wpwedding/.env.$ENVIRONMENT to ./repos/sytesbook-wpwedding/.env"
     exit 1
 fi
 
 dotenvx decrypt -f ./repos/sytesbook-wpwedding/.env
+if ! [[ $? -eq 0 ]]; then
+    echo "Failed to decrypt .env.$ENVIRONMENT"
+    exit 1
+fi
 echo "  Done"
 
 
