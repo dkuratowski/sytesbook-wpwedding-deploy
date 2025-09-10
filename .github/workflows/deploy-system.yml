@@ -169,7 +169,7 @@ jobs:
         host: ${{ vars.SSH_HOST }}
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
-        source: "./repos/sytesbook-wpwedding-deploy/scripts/backup.sh"
+        source: "./repos/sytesbook-wpwedding-deploy/scripts/backup.sh,./repos/sytesbook-wpwedding-deploy/scripts/workflow.sh"
         strip_components: 4   # Remove "./repos/sytesbook-wpwedding-deploy/scripts" from the beginning of the source path
         target: "${{ vars.ENV_ROOT_DIR }}/scripts"
     
@@ -183,7 +183,8 @@ jobs:
         script: |
           echo "Setup CRON jobs"
           ( \
-          echo "${{ vars.BACKUP_CRON_SCHEDULE }} cd ${{ vars.ENV_ROOT_DIR }} && ./scripts/backup.sh" \
+          echo "${{ vars.BACKUP_CRON_SCHEDULE }} cd ${{ vars.ENV_ROOT_DIR }} && ./scripts/backup.sh" && \
+          echo "${{ vars.WORKFLOW_CRON_SCHEDULE }} cd ${{ vars.ENV_ROOT_DIR }} && ./scripts/workflow.sh" \
           ) | crontab -
           echo "CRON jobs successfully setup"
           crontab -l
