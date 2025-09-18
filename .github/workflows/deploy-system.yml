@@ -162,6 +162,8 @@ jobs:
           echo "Executing migrations"
           cd ${{ vars.ENV_ROOT_DIR }}/deployment
           ./vendor/wp-cli/wp-cli/bin/wp migrations up --path=./wp
+          echo "Flushing rewrite rules"
+          ./vendor/wp-cli/wp-cli/bin/wp rewrite flush --path=./wp
 
     - name: Deploy scripts to the web server
       uses: appleboy/scp-action@v0.1.7
