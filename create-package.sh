@@ -20,8 +20,14 @@ echo "* Creating version.json"
 cd ./repos/sytesbook-wpwedding
 touch version.json
 echo "{" >> version.json
-echo "  \"revision\": \"$(git rev-parse HEAD)\"," >> version.json
-echo "  \"branch\": \"$(git rev-parse --abbrev-ref HEAD)\"" >> version.json
+echo "  \"backend\": {" >> version.json
+echo "    \"revision\": \"$(git rev-parse HEAD)\"," >> version.json
+echo "    \"branch\": \"$(git rev-parse --abbrev-ref HEAD)\"" >> version.json
+echo "  }," >> version.json
+echo "  \"frontend\": {" >> version.json
+echo "    \"revision\": \"$(cd ../sytesbook-frontend && git rev-parse HEAD)\"," >> version.json
+echo "    \"branch\": \"$(cd ../sytesbook-frontend && git rev-parse --abbrev-ref HEAD)\"" >> version.json
+echo "  }," >> version.json
 echo "}" >> version.json
 echo "$(cat version.json)"
 cd ../..
