@@ -39,11 +39,17 @@ jobs:
       with:
         node-version: 22
 
+    - uses: pnpm/action-setup@v4
+      name: Install pnpm
+      with:
+        version: 10
+
     - name: Check versions
       run: |
         echo "PHP version: $(php --version)"
         echo "NodeJS version: $(node --version)"
         echo "NPM version: $(npm --version)"
+        echo "PNPM version: $(pnpm --version)"
 
     - name: "Checkout: sytesbook-wpwedding-deploy"
       uses: actions/checkout@v4
