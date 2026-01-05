@@ -10,9 +10,17 @@ on:
         options:
           - staging
           - production
-      tag:
+      backend-tag:
         type: string
-        description: The branch, tag or SHA to checkout. Falls back to default branch if not given.
+        description: The branch, tag or SHA of sytesbook-wpwedding to checkout. Falls back to default branch if not given.
+        required: false
+      frontend-tag:
+        type: string
+        description: The branch, tag or SHA of sytesbook-frontend to checkout. Falls back to default branch if not given.
+        required: false
+      installer-tag:
+        type: string
+        description: The branch, tag or SHA of sytesbook-wpwedding-installer to checkout. Falls back to default branch if not given.
         required: false
 
 jobs:
@@ -48,7 +56,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: dkuratowski/sytesbook-wpwedding
-        ref: ${{ inputs.tag }}
+        ref: ${{ inputs.backend-tag }}
         path: repos/sytesbook-wpwedding
         token: ${{ secrets.GIT_ACCESS_TOKEN }}
 
@@ -56,7 +64,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: dkuratowski/sytesbook-frontend
-        ref: ${{ inputs.tag }}
+        ref: ${{ inputs.frontend-tag }}
         path: repos/sytesbook-frontend
         token: ${{ secrets.GIT_ACCESS_TOKEN }}
 
@@ -64,7 +72,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: dkuratowski/sytesbook-wpwedding-installer
-        ref: ${{ inputs.tag }}
+        ref: ${{ inputs.installer-tag }}
         path: repos/sytesbook-wpwedding-installer
         token: ${{ secrets.GIT_ACCESS_TOKEN }}
 
@@ -72,7 +80,6 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: dkuratowski/sytes-react
-        ref: ${{ inputs.tag }}
         path: repos/sytes-react
         token: ${{ secrets.GIT_ACCESS_TOKEN }}
 
