@@ -27,7 +27,7 @@ echo "  }," >> version.json
 echo "  \"frontend\": {" >> version.json
 echo "    \"revision\": \"$(cd ../sytesbook-frontend && git rev-parse HEAD)\"," >> version.json
 echo "    \"branch\": \"$(cd ../sytesbook-frontend && git rev-parse --abbrev-ref HEAD)\"" >> version.json
-echo "  }," >> version.json
+echo "  }" >> version.json
 echo "}" >> version.json
 echo "$(cat version.json)"
 cd ../..
